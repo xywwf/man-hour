@@ -14,8 +14,8 @@ AppAsset::register($this);
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="<?= Yii::$app->charset ?>">
+<meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
@@ -26,7 +26,7 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'My Company',
+                'brandLabel' => Yii::$app->name,
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
@@ -35,12 +35,12 @@ AppAsset::register($this);
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
-                    ['label' => 'Home', 'url' => ['/site/index']],
-                    ['label' => 'About', 'url' => ['/site/about']],
-                    ['label' => 'Contact', 'url' => ['/site/contact']],
+                    ['label' => '主页', 'url' => ['/site/index']],
+                    //['label' => '关于', 'url' => ['/site/about']],
+                    ['label' => '联系', 'url' => ['/site/contact']],
                     Yii::$app->user->isGuest ?
-                        ['label' => 'Login', 'url' => ['/site/login']] :
-                        ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                        ['label' => '登录', 'url' => ['/site/login']] :
+                        ['label' => '登出 (' . Yii::$app->user->identity->username . ')',
                             'url' => ['/site/logout'],
                             'linkOptions' => ['data-method' => 'post']],
                 ],
@@ -54,16 +54,25 @@ AppAsset::register($this);
             ]) ?>
             <?= $content ?>
         </div>
-    </div>
+	</div>
 
-    <footer class="footer">
-        <div class="container">
-            <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-            <p class="pull-right"><?= Yii::powered() ?></p>
-        </div>
-    </footer>
+	<footer class="footer">
+		<div class="container">
+			<p class="pull-left">&copy; 吉利 汽车(上海) <?= date('Y') ?></p>
+			<p class="pull-right"><?= Yii::powered() ?></p>
+		</div>
+	</footer>
 
 <?php $this->endBody() ?>
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+	//$('input, textarea').placeholder();
+	$(":input[placeholder]").placeholder();
+});
+</script>
+
 </body>
 </html>
 <?php $this->endPage() ?>

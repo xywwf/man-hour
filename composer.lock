@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b1cc6c8c161c72bb689cfba0d4e1fd86",
+    "hash": "438cede701ba98f84ff02ddfd4ab1f54",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -101,6 +101,51 @@
                 "jquery",
                 "library"
             ]
+        },
+        {
+            "name": "bower-asset/jquery-placeholder",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mathiasbynens/jquery-placeholder.git",
+                "reference": "d8daa7f2d282d8426f932c5848250a483c86f8ae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mathiasbynens/jquery-placeholder/zipball/d8daa7f2d282d8426f932c5848250a483c86f8ae",
+                "reference": "d8daa7f2d282d8426f932c5848250a483c86f8ae",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.6"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "jquery.placeholder.js"
+                ],
+                "bower-asset-ignore": [
+                    "*",
+                    "!/bower.json",
+                    "!/jquery.placeholder.js",
+                    "!/jquery.placeholder.min.js",
+                    "!/jquery.placeholder.min.js.map"
+                ],
+                "branch-alias": {
+                    "dev-master": "2.1.1-dev"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A jQuery plugin that enables HTML5 placeholder behavior for browsers that aren’t trying hard enough yet",
+            "keywords": [
+                "form",
+                "jQuery",
+                "jquery-plugin",
+                "placeholder"
+            ],
+            "time": "2015-03-16 22:00:07"
         },
         {
             "name": "bower-asset/jquery.inputmask",
@@ -916,7 +961,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "bower-asset/jquery-placeholder": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

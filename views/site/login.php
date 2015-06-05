@@ -9,11 +9,11 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Please fill out the following fields to login:</p>
-
+<div class="site-login" style="padding-left: 20%;" >
+    <h1>欢迎使用<?= Html::encode(Yii::$app->name) ?></h1>
+    <br/><br/>
+    <p>填写账户信息登录工时管理系统:</p>
+    <br/>
     <?php $form = ActiveForm::begin([
         'id' => 'login-form',
         'options' => ['class' => 'form-horizontal'],
@@ -23,17 +23,17 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
-    <?= $form->field($model, 'username') ?>
+    <?= $form->field($model, 'username')->textinput(['placeholder' => '请输入用户名'])->label('用户名') ?>
 
-    <?= $form->field($model, 'password')->passwordInput() ?>
+    <?= $form->field($model, 'password')->passwordInput()->label('密码') ?>
 
     <?= $form->field($model, 'rememberMe', [
         'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-    ])->checkbox() ?>
+    ])->label('记住我')->checkbox() ?>
 
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">
-            <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+            <?= Html::submitButton('登录', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
         </div>
     </div>
 

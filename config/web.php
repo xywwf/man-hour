@@ -3,14 +3,24 @@
 $params = require(__DIR__ . '/params.php');
 
 $config = [
-    'id' => 'basic',
+    'id' => 'man-hour',
+    'name' => '吉利汽车（上海）工时管理系统',
     'basePath' => dirname(__DIR__),
+    'language' => 'zh-CN',
     'bootstrap' => ['log'],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'oeri-TZkF3NqFoqDXpV4MoPRLGbSz7Bg',
         ],
+/*         'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName'  => false,//����index.php
+            //'suffix' => '.html',//��׺
+            'rules' => [
+                //'<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+            ],
+        ], */
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
