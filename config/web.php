@@ -15,8 +15,7 @@ $config = [
         ],
 /*         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName'  => false,//����index.php
-            //'suffix' => '.html',//��׺
+            'showScriptName'  => false,//hide index.php
             'rules' => [
                 //'<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],

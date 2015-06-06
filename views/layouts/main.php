@@ -17,7 +17,7 @@ AppAsset::register($this);
 <meta charset="<?= Yii::$app->charset ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
+    <title><?= Html::encode(Yii::$app->name.($this->title?" - ":"").$this->title) ?></title>
     <?php $this->head() ?>
 </head>
 <body>
@@ -37,6 +37,7 @@ AppAsset::register($this);
                 'items' => [
                     ['label' => '主页', 'url' => ['/site/index']],
                     //['label' => '关于', 'url' => ['/site/about']],
+                    ['label' => '用户管理', 'url' => ['/user/index']],                    
                     ['label' => '联系', 'url' => ['/site/contact']],
                     Yii::$app->user->isGuest ?
                         ['label' => '登录', 'url' => ['/site/login']] :
@@ -69,7 +70,7 @@ AppAsset::register($this);
 $(document).ready(function()
 {
 	//$('input, textarea').placeholder();
-	$(":input[placeholder]").placeholder();
+	//$(":input[placeholder]").placeholder();
 });
 </script>
 
