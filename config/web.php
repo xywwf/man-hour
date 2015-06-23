@@ -46,6 +46,9 @@ $config = [
                 ],
             ],
         ],
+        'formatter' => [
+            'datetimeFormat' => 'yyyy-MM-dd HH:mm:ss',
+        ],
         'db' => require(__DIR__ . '/db.php'),
     ],
     'params' => $params,

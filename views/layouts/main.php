@@ -32,21 +32,38 @@ AppAsset::register($this);
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
+
+            
+            $navItems = [
+                ['label' => '主页'  , 'url' => ['/site/index']],
+                ['label' => '工时记录', 'url' => ['/entry/index']]
+            ];
+            
+            //if( Yii::$app->user->isAdmin )
+            {
+                $navItems[] = ['label' => '项目管理', 'url' => ['/project/index']];
+                $navItems[] = ['label' => '用户管理', 'url' => ['/user/index']];                
+            }
+
+            //$navItems[] = ['label' => '联系', 'url' => ['/site/contact']];
+            
+            if( Yii::$app->user->isGuest )
+            {
+                $navItems[] = ['label' => '登录', 'url' => ['/site/login']];
+            }
+            else
+            {
+                $navItems[] = ['label' => '登出 (' . Yii::$app->user->identity->username . ')',
+                            'url' => ['/site/logout'],
+                            'linkOptions' => ['data-method' => 'post']];
+            }
+            
+            
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                    ['label' => '主页', 'url' => ['/site/index']],
-                    //['label' => '关于', 'url' => ['/site/about']],
-                    ['label' => '用户管理', 'url' => ['/user/index']],                    
-                    ['label' => '联系', 'url' => ['/site/contact']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => '登录', 'url' => ['/site/login']] :
-                        ['label' => '登出 (' . Yii::$app->user->identity->username . ')',
-                            'url' => ['/site/logout'],
-                            'linkOptions' => ['data-method' => 'post']],
-                ],
+                'items' => $navItems,
             ]);
-            NavBar::end();
+            NavBar::end(); 
         ?>
 
         <div class="container">
@@ -60,7 +77,7 @@ AppAsset::register($this);
 	<footer class="footer">
 		<div class="container">
 			<p class="pull-left">&copy; 吉利 汽车(上海) <?= date('Y') ?></p>
-			<p class="pull-right"><?= Yii::powered() ?></p>
+			<p class="pull-right">Powered by <a href="http://www.shanghai-mxkj.com/" rel="external">MiaoXiang Electronics</a></p>
 		</div>
 	</footer>
 
