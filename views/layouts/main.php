@@ -58,11 +58,18 @@ AppAsset::register($this);
                             'linkOptions' => ['data-method' => 'post']];
             }
             
+            $navItems[] = ['label' => 'En/中',
+                           'items' => [
+                               ['label' => 'English(英语)', 'url' => ['/site/language','l'=>'en-US']],
+                               ['label' => 'Chinese(中文)', 'url' => ['/site/language','l'=>'zh-CN']],
+                           ],
+            ];
             
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => $navItems,
             ]);
+            
             NavBar::end(); 
         ?>
 

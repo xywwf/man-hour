@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 $url,     //这里就可以加各种参数了，调用各种挂件
                                 [
                                     'title' => '修改',
-                                    'onclick' => 'javascript: fancybox(this); return false;',
+                                    'onclick' => 'fancybox(this); return false;',
                                 ]
                             );
                         },

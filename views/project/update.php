@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Project */
 
-$this->title = '编辑项目(Modify Project): ' . ' ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
+$this->title = '修改项目信息:  ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => '项目信息', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = '更新(Update)';
+$this->params['breadcrumbs'][] = '修改';
 ?>
 <div class="project-update">
 

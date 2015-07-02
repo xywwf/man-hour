@@ -20,8 +20,8 @@ use Yii;
 class Project extends \yii\db\ActiveRecord
 {
     public static $state_map = [
-        '0' => '未启动',
-        '1' => '正常',
+        '0' => '正常',
+        '1' => '已完成',
         '2' => '关闭',
     ];
     
@@ -54,7 +54,7 @@ class Project extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => '项目号',
             'state' => '状态',
             'name' => '项目名称',
             'start_time' => '启动时间',

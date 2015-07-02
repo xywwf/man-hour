@@ -2,24 +2,42 @@
 
 $params = require(__DIR__ . '/params.php');
 
+Yii::$classMap = array_merge(Yii::$classMap, require(__DIR__ . '/classes.php'));
+
 $config = [
     'id' => 'man-hour',
     'name' => '吉利汽车（上海）工时管理系统',
     'basePath' => dirname(__DIR__),
     'language' => 'zh-CN',
+    'on beforeRequest' => function ($event) {
+        # use cookie to store language
+        $l = Yii::$app->request->cookies->get('language');
+        Yii::$app->language = $l ? $l : 'zh-CN';
+        return; 
+    },
     'bootstrap' => ['log'],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'oeri-TZkF3NqFoqDXpV4MoPRLGbSz7Bg',
         ],
-/*         'urlManager' => [
+        'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName'  => false,//hide index.php
+/*            
             'rules' => [
-                //'<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                'dashboard' => 'site/index',
+
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                'POST <controller:\w+>s' => '<controller>/create',
+                '<controller:\w+>s' => '<controller>/index',
+                
+                'PUT <controller:\w+>/<id:\d+>'    => '<controller>/update',
+                'DELETE <controller:\w+>/<id:\d+>' => '<controller>/delete',
+                '<controller:\w+>/<id:\d+>'        => '<controller>/view',
             ],
-        ], */
+*/            
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
