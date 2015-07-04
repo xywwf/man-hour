@@ -36,7 +36,7 @@ use app\models\Project;
     </table>
 
     <div class="form-group" style="text-align: center">
-        <?= Html::submitButton('保存', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton(Yii::t('app','Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         <?php /*= Html::resetButton('取消', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) */?>  
     </div>
 

@@ -11,7 +11,7 @@ $config = [
     'language' => 'zh-CN',
     'on beforeRequest' => function ($event) {
         # use cookie to store language
-        $l = Yii::$app->request->cookies->get('language');
+        $l = Yii::$app->request->cookies->get('_language');
         Yii::$app->language = $l ? $l : 'zh-CN';
         return; 
     },

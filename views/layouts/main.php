@@ -47,6 +47,14 @@ AppAsset::register($this);
 
             //$navItems[] = ['label' => '联系', 'url' => ['/site/contact']];
             
+            $navItems[] = ['label' => 'En/中',
+                'items' => [
+                    ['label' => 'English(英语)', 'url' => ['/site/language','l'=>'en-US']],
+                    ['label' => 'Chinese(中文)', 'url' => ['/site/language','l'=>'zh-CN']],
+                ],
+            ];
+                        
+            
             if( Yii::$app->user->isGuest )
             {
                 $navItems[] = ['label' => '登录', 'url' => ['/site/login']];
@@ -57,13 +65,6 @@ AppAsset::register($this);
                             'url' => ['/site/logout'],
                             'linkOptions' => ['data-method' => 'post']];
             }
-            
-            $navItems[] = ['label' => 'En/中',
-                           'items' => [
-                               ['label' => 'English(英语)', 'url' => ['/site/language','l'=>'en-US']],
-                               ['label' => 'Chinese(中文)', 'url' => ['/site/language','l'=>'zh-CN']],
-                           ],
-            ];
             
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],

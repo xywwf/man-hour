@@ -27,7 +27,7 @@ class Entry extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'entry';
+        return 'mh_entry';
     }
 
     /**

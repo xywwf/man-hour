@@ -57,7 +57,7 @@ class SiteController extends Controller
         $language = Yii::$app->request->get('l');
         if ($language){
             #use cookie to store language
-            $cookie = new yii\web\Cookie(['name' => 'language', 'value' => $language, 'expire' => 3600*24*30,]);
+            $cookie = new yii\web\Cookie(['name' => '_language', 'value' => $language, 'expire' => 3600*24*30,]);
             $cookie->expire = time() + 3600*24*30;
             Yii::$app->response->cookies->add($cookie);
         }

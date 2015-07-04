@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\MhUser;
+use app\models\User;
 
 /**
- * MhUserSearch represents the model behind the search form about `app\models\MhUser`.
+ * UserSearch represents the model behind the search form about `app\models\User`.
  */
-class MhUserSearch extends MhUser
+class UserSearch extends User
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class MhUserSearch extends MhUser
     public function rules()
     {
         return [
-            [['id', 'type', 'state', 'ext'], 'integer'],
-            [['username', 'mobile', 'email', 'password', 'create_time', 'ext2'], 'safe'],
+            [['uid', 'type', 'ext'], 'integer'],
+            [['username', 'mobile', 'email', 'password', 'created_time', 'ext2'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class MhUserSearch extends MhUser
      */
     public function search($params)
     {
-        $query = MhUser::find();
+        $query = User::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -56,10 +56,9 @@ class MhUserSearch extends MhUser
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
+            'uid' => $this->uid,
             'type' => $this->type,
-            'state' => $this->state,
-            'create_time' => $this->create_time,
+            'created_time' => $this->created_time,
             'ext' => $this->ext,
         ]);
 

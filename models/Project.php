@@ -30,7 +30,7 @@ class Project extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'project';
+        return 'mh_project_info';
     }
 
     /**

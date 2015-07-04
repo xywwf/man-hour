@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p style="text-align: right">
         <?= Html::a('+添加新项目', ['create'], [
             'class' => 'btn btn-success', 
-            'onclick' => 'javascript: fancybox(this); return false;'
+            'onclick' => 'fancybox(this); return false;'
         ]) ?>
     </p>
 

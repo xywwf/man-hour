@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\MhUser */
 
-$this->title = 'Create Mh User';
-$this->params['breadcrumbs'][] = ['label' => 'Mh Users', 'url' => ['index']];
+$this->title = '创建新用户';
+$this->params['breadcrumbs'][] = ['label' => '用户列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="mh-user-create">
