@@ -34,6 +34,17 @@ class MyController extends \yii\web\Controller
     
         return $headers->get('X-Pjax');
     }
+    
+    public static function getRequest($name = null, $defaultValue = null)
+    {
+        return Yii::$app->getRequest()->get($name, $defaultValue);
+    }
+
+    public function req($name = null, $defaultValue = null)
+    {
+        return static::getRequest($name, $defaultValue);
+    }
+    
 }
 
 ?>

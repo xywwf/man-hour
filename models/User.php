@@ -70,23 +70,23 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function attributeLabels()
     {
         return [
-            'uid' => Yii::t('app', '用户ID'),
-            'type' => Yii::t('app', '类型'),
-            'username' => Yii::t('app', '用户名'),
-            'personal_name' => Yii::t('app', '姓名'),
-            'personal_id' => Yii::t('app', '身份证'),
-            'employe_id' => Yii::t('app', '员工号'),
-            'department_id' => Yii::t('app', '部门号'),
-            'department_name' => Yii::t('app', '部门名称'),
-            'mobile' => Yii::t('app', '手机号'),
-            'email' => Yii::t('app', '邮箱帐号'),
-            'password' => Yii::t('app', '密码'),
-            'created_time' => Yii::t('app', '创建时间'),
-            'created_by' => Yii::t('app', '创建者'),
-            'last_updated_time' => Yii::t('app', '更新时间'),
-            'last_updated_by' => Yii::t('app', '更新者'),
-            'ext' => Yii::t('app', '扩展'),
-            'ext2' => Yii::t('app', '扩展2'),
+            'uid' => Yii::t('app', 'User ID'),
+            'type' => Yii::t('app', 'User type'),
+            'username' => Yii::t('app', 'Username'),
+            'personal_name' => Yii::t('app', 'Personal name'),
+            'personal_id' => Yii::t('app', 'Identity card'),
+            'employe_id' => Yii::t('app', 'Employe ID'),
+            'department_id' => Yii::t('app', 'Department ID'),
+            'department_name' => Yii::t('app', 'Department name'),
+            'mobile' => Yii::t('app', 'Mobile'),
+            'email' => Yii::t('app', 'Email'),
+            'password' => Yii::t('app', 'Password'),
+            'created_time' => Yii::t('app', 'Created time'),
+            'created_by' => Yii::t('app', 'Created by'),
+            'last_updated_time' => Yii::t('app', 'Last updated time'),
+            'last_updated_by' => Yii::t('app', 'Last updated by'),
+            'ext' => Yii::t('app', 'ext'),
+            'ext2' => Yii::t('app', 'ext2'),
         ];
     }
 
@@ -107,28 +107,34 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $this->hasOne(UserAuth::className(), ['uid' => 'uid']);
     }
     
-    public function saveUserAuth()
-    {     
+    public function saveUserAndAuth()
+    {
         $userAuth = $this->userAuth;
         if ($userAuth === null) {
-
+            $userAuth           = new UserAuth();
+            
             $password = Yii::$app->params['defaultPassword'];
             if( isset($this->password) && strlen($this->password) )
             {
-                $password = $this->password;               
+                $password = $this->password;
             }
-            
-            $userAuth           = new UserAuth();
-            $userAuth->uid      = $this->uid;            
             $userAuth->password = Yii::$app->security->generatePasswordHash($password);
-
-            return $userAuth->save();
             
-        } else if( isset($this->password) && strlen($this->password) ) {
-            $userAuth->password = Yii::$app->security->generatePasswordHash($password);
-            return $userAuth->save();
+        } elseif (isset($this->password) && strlen($this->password)) {
+            //update password
+            $userAuth->password = Yii::$app->security->generatePasswordHash($this->password);
         }
-        return true;
+        
+        $thisModel = $this;
+        return $this->getDb()->transaction( function() use (&$thisModel, &$userAuth) {
+            if ( $thisModel->save() ) {
+                $userAuth->uid = $thisModel->uid;
+                if ($userAuth->save()) {
+                    return true;
+                }
+            }
+            throw new \Exception('Add user to DB failed!');
+        });
     }
     
     /**

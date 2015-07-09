@@ -54,13 +54,13 @@ class Project extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => '项目号',
-            'state' => '状态',
-            'name' => '项目名称',
-            'start_time' => '启动时间',
-            'target_time' => '预计完成时间',
-            'end_time' => '完成时间',
-            'description' => '项目描述',
+            'id' => Yii::t('app', 'Project ID'),
+            'state' => Yii::t('app', 'State'),
+            'name' => Yii::t('app', 'Project name'),
+            'start_time' => Yii::t('app', 'Start time'),
+            'target_time' => Yii::t('app', 'Target time'),
+            'end_time' => Yii::t('app', 'Finish time'),
+            'description' => Yii::t('app', 'Project description'),
         ];
     }
 

@@ -11,13 +11,16 @@ use app\models\User;
 
 <div class="mh-user-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin( ['fieldConfig' => [
+            //'template' => "{label}\n<div class=\"col-lg-6\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
+            //'labelOptions' => ['class' => 'col-lg-4 control-label'],
+        ]]); ?>
     
     <table width="100%" style="margin-top: 20px">
         <tr><td><?= $form->field($model, 'type')->dropDownList(User::$type_map) ?></td></tr>
         <tr>
             <td width="45%"><?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?></td>
-            <td width="10%"></td>
+            <td width="5%"></td>
             <td><?= $form->field($model, 'personal_name')->textInput(['maxlength' => true]) ?></td>
         </tr>
         <tr>
@@ -57,8 +60,16 @@ use app\models\User;
  */
  ?>   
     <div class="form-group" style="text-align: center">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : '保存', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>           
-        <?= Html::resetButton('重置密码', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>    
+        <?php 
+            if ($model->isNewRecord){
+                echo Html::submitButton( Yii::t('app', 'Save'), ['class' => 'btn btn-success']);
+            } else {
+                echo Html::submitButton( Yii::t('app', 'Save'), ['class' => 'btn btn-primary']);
+                echo Html::a(Yii::t('app','Reset password'), ['user/reset-password', 'id'=>$model->uid], [
+                        'class' => 'btn btn-primary'
+                    ]); 
+            }
+         ?>
     </div>
 
     <?php ActiveForm::end(); ?>

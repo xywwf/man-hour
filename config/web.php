@@ -6,7 +6,7 @@ Yii::$classMap = array_merge(Yii::$classMap, require(__DIR__ . '/classes.php'));
 
 $config = [
     'id' => 'man-hour',
-    'name' => '吉利汽车（上海）工时管理系统',
+    'name' => 'Geely Auto (Shanghai) manhour system',
     'basePath' => dirname(__DIR__),
     'language' => 'zh-CN',
     'on beforeRequest' => function ($event) {

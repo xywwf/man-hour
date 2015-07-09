@@ -3,6 +3,28 @@ body {
     height: 100%;
 }
 
+.bg_main {
+    position: fixed;	
+    width: 100%;
+    height: 100%;
+	background-color: #eaf0fa;
+	z-index: -100;
+}
+
+.bg_login {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #eaf0fa url(/images/bg.jpg) no-repeat center center scroll;
+    filter:alpha(opacity=80);  
+    -moz-opacity:0.8;  
+    -khtml-opacity: 0.8;  
+    #opacity: 0.8; 
+	z-index: -1;	
+}
+
 .wrap {
     min-height: 100%;
     height: auto;
@@ -93,4 +115,9 @@ a.desc:after {
     border-left: 3px solid #eed3d7;
     padding: 10px 20px;
     margin: 0 0 15px 0;
+}
+
+.btn {
+	margin: 10px;
+}
 }

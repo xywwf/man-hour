@@ -34,6 +34,14 @@ class ProjectController extends  \app\MyController
         $searchModel = new ProjectSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        
+        if( $this->req('page') === 'last' )
+        {
+            $pagination = $dataProvider->getPagination();
+            $pagination->totalCount = $dataProvider->getTotalCount();           
+            $pagination->setPage($pagination->totalCount, true);
+        }
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -62,21 +70,8 @@ class ProjectController extends  \app\MyController
         $model = new Project();
         
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->redirect(['index']);
+            return $this->redirect(['index', 'page' => 'last']);
         } else {
-            /*
-            if( Yii::$app->request->isAjax ){
-                //return "this is from ajax";
-                return $this->renderAjax('create', [
-                    'model' => $model,
-                ]);
-            } else {
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
-            }
-            */
             return $this->render('create', [
                 'model' => $model,
             ]);
@@ -92,15 +87,6 @@ class ProjectController extends  \app\MyController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        /*
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-        */
         
         if ($model->load(Yii::$app->request->post()) && $model->save() ) {
             //Yii::$app->getSession()->setFlash('success', '保存成功！');
@@ -108,18 +94,7 @@ class ProjectController extends  \app\MyController
             //var_dump(Yii::$app->request);
             //return $this->redirect(['index']);
         }
-/*
-        if( Yii::$app->request->isAjax ){
-            //return "this is from ajax";
-            return $this->renderAjax('update', [
-                'model' => $model,
-            ]);
-        } else {
-            return $this->render('update', [
-                    'model' => $model,
-                ]);
-        }
-*/        
+       
         return $this->render('update', [
             'model' => $model,
         ]);
@@ -140,6 +115,20 @@ class ProjectController extends  \app\MyController
         return $this->redirect(['index']);
     }
 
+    /**
+     * Deletes many existing Project models together.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param string $ids
+     * @return mixed
+     */
+    public function actionDeletes($ids)
+    {
+        Project::deleteAll(['in', 'id', explode(',', $ids)]);
+    
+        return $this->redirect(['index', 'page' => $this->req('page')]);
+    }
+    
+    
     /**
      * Finds the Project model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

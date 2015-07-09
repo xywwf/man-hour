@@ -62,33 +62,8 @@ class UserController extends \app\MyController
     {
         $model = new User();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            
-            var_dump($model->userAuth);
-            $model->delete();
-            Yii::$app->end();
-            
-            $password = Yii::$app->params['defaultPassword'];
-            if( isset($model->password) && strlen($model->password) )
-            {
-                $password = $model->password;               
-            }
-
-            $userAuth           = new UserAuth();
-            $userAuth->uid      = $model->uid;            
-            $userAuth->password = Yii::$app->security->generatePasswordHash($password);
-
-            if ($userAuth->save())
-            {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-            else {
-                var_dump($userAuth->errors);
-                var_dump($model->errors);
-                $model->delete();
-                echo "userAuth->save() fail...."; 
-                Yii::$app->end();
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->saveUserAndAuth()) {
+            return $this->redirect(['index']);
         } 
         
         return $this->render('create', [
@@ -106,37 +81,34 @@ class UserController extends \app\MyController
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            
-            $userAuth = $model->userAuth;
-            if ($userAuth === null) {
-            
-                $password = Yii::$app->params['defaultPassword'];
-                if( isset($this->password) && strlen($this->password) )
-                {
-                    $password = $this->password;
-                }
-            
-                $userAuth           = new UserAuth();
-                $userAuth->uid      = $this->uid;
-                $userAuth->password = Yii::$app->security->generatePasswordHash($password);
-            
-                $userAuth->save();
-            
-            } else if( isset($this->password) && strlen($this->password) ) {
-                $userAuth->password = Yii::$app->security->generatePasswordHash($password);
-                $userAuth->save();
-            }           
-            
-            
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if ($model->load(Yii::$app->request->post()) && $model->saveUserAndAuth()) {
+            return $this->redirect(['index']);
         }
+        
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
+    /**
+     * Reset the password of an existing User model.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionResetPassword($id)
+    {
+        $model = $this->findModel($id);
+        
+        $model->password = Yii::$app->params['defaultPassword'];
+    
+        if( $model->saveUserAndAuth() ) {
+            //return $this->redirect(['index']);
+        }
+    
+        //return $this->refresh();
+        return $this->redirect(['update', 'id' => $id]);
+    }
+    
     /**
      * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

@@ -17,16 +17,17 @@ AppAsset::register($this);
 <meta charset="<?= Yii::$app->charset ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode(Yii::$app->name.($this->title?" - ":"").$this->title) ?></title>
-    <?php $this->head() ?>
+    <title><?= Html::encode(Yii::t('app', Yii::$app->name).($this->title?" - ":"").$this->title) ?></title>
+    <?php $this->head() ?>    
 </head>
 <body>
 
 <?php $this->beginBody() ?>
+    <div class="bg_main"></div>
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => Yii::$app->name,
+                'brandLabel' => Yii::t('app',Yii::$app->name),
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
@@ -35,14 +36,14 @@ AppAsset::register($this);
 
             
             $navItems = [
-                ['label' => '主页'  , 'url' => ['/site/index']],
-                ['label' => '工时记录', 'url' => ['/entry/index']]
+                ['label' => Yii::t('app', 'Home')  , 'url' => ['/site/index']],
+                ['label' => Yii::t('app', 'Man hour record'), 'url' => ['/entry/index']]
             ];
             
             //if( Yii::$app->user->isAdmin )
             {
-                $navItems[] = ['label' => '项目管理', 'url' => ['/project/index']];
-                $navItems[] = ['label' => '用户管理', 'url' => ['/user/index']];                
+                $navItems[] = ['label' => Yii::t('app', 'Project management'), 'url' => ['/project/index']];
+                $navItems[] = ['label' => Yii::t('app', 'User management'), 'url' => ['/user/index']];                
             }
 
             //$navItems[] = ['label' => '联系', 'url' => ['/site/contact']];
@@ -57,11 +58,11 @@ AppAsset::register($this);
             
             if( Yii::$app->user->isGuest )
             {
-                $navItems[] = ['label' => '登录', 'url' => ['/site/login']];
+                $navItems[] = ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']];
             }
             else
             {
-                $navItems[] = ['label' => '登出 (' . Yii::$app->user->identity->username . ')',
+                $navItems[] = ['label' => Yii::t('app', 'Logout').'(' . Yii::$app->user->identity->username . ')',
                             'url' => ['/site/logout'],
                             'linkOptions' => ['data-method' => 'post']];
             }
@@ -74,7 +75,7 @@ AppAsset::register($this);
             NavBar::end(); 
         ?>
 
-        <div class="container">
+        <div class="container" sytle="">
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             ]) ?>
@@ -84,7 +85,7 @@ AppAsset::register($this);
 
 	<footer class="footer">
 		<div class="container">
-			<p class="pull-left">&copy; 吉利 汽车(上海) <?= date('Y') ?></p>
+			<p class="pull-left">&copy; <?= Yii::t('app', 'Geely Auto (Shanghai) ') . date('Y') ?></p>
 			<p class="pull-right">Powered by <a href="http://www.shanghai-mxkj.com/" rel="external">MiaoXiang Electronics</a></p>
 		</div>
 	</footer>

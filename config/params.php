@@ -2,5 +2,5 @@
 
 return [
     'adminEmail' => 'admin@geely.com',
-    'defaultPassword' => 'geely888',
+    'defaultPassword' => 'geely123',
 ];

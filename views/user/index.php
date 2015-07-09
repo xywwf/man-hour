@@ -8,7 +8,7 @@ use app\models\User;
 /* @var $searchModel app\models\MhUserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '用户列表';
+$this->title = Yii::t('app','User list');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="mh-user-index">
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <p style="text-align: right">
-        <?= Html::a('+添加新用户', ['create'], [
+        <?= Html::a(Yii::t('app','+Add new user'), ['create'], [
             'class' => 'btn btn-success', 
             'onclick' => 'fancybox(this); return false;'
         ]) ?>
@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'class' => 'yii\grid\ActionColumn',
-                'header' => '操作',
+                'header' => Yii::t('app','Action'),
                 'template' => '{update}{delete}',
                 'headerOptions' => ['width' => '50' ],
                 'buttons' => [
@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             '<span class="glyphicon glyphicon-pencil"></span>',
                             $url,     //这里就可以加各种参数了，调用各种挂件
                             [
-                                'title' => '修改',
+                                'title' => Yii::t('app','Change'),
                                 'onclick' => 'fancybox(this); return false;',
                             ]
                         );
