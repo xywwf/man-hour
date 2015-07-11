@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use Yii;
 use app\models\User;
-use app\models\UserAuth;
 use app\models\UserSearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,6 +34,13 @@ class UserController extends \app\MyController
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        if( $this->req('page') === 'last' )
+        {
+            $pagination = $dataProvider->getPagination();
+            $pagination->totalCount = $dataProvider->getTotalCount();
+            $pagination->setPage($pagination->totalCount, true);
+        }        
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -61,14 +67,16 @@ class UserController extends \app\MyController
     public function actionCreate()
     {
         $model = new User();
+        $model->type = User::TYPE_NORMAL;
 
         if ($model->load(Yii::$app->request->post()) && $model->saveUserAndAuth()) {
-            return $this->redirect(['index']);
-        } 
+            return $this->redirect(['index', 'page' => 'last']);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
         
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -82,7 +90,7 @@ class UserController extends \app\MyController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->saveUserAndAuth()) {
-            return $this->redirect(['index']);
+            //return $this->redirect(['index']);
         }
         
         return $this->render('update', [
@@ -99,15 +107,24 @@ class UserController extends \app\MyController
     {
         $model = $this->findModel($id);
         
-        $model->password = Yii::$app->params['defaultPassword'];
-    
+        $model->password = Yii::$app->params['defaultPassword'];   
         if( $model->saveUserAndAuth() ) {
-            //return $this->redirect(['index']);
         }
     
-        //return $this->refresh();
-        return $this->redirect(['update', 'id' => $id]);
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
+
+    /**
+     * Reset the password of an existing User model.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionResetPasswords($ids)
+    {
+        return "TODO";
+    }    
     
     /**
      * Deletes an existing User model.
@@ -122,6 +139,20 @@ class UserController extends \app\MyController
         return $this->redirect(['index']);
     }
 
+    /**
+     * Deletes many existing User models together.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param string $ids
+     * @return mixed
+     */
+    public function actionDeletes($ids)
+    {
+        User::deleteAll(['in', 'id', explode(',', $ids)]);
+    
+        return $this->redirect(['index', 'page' => $this->req('page')]);
+    }    
+    
+    
     /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

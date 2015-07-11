@@ -12,7 +12,7 @@ $config = [
     'on beforeRequest' => function ($event) {
         # use cookie to store language
         $l = Yii::$app->request->cookies->get('_language');
-        Yii::$app->language = $l ? $l : 'zh-CN';
+        Yii::$app->language = $l ? $l->value : 'zh-CN';
         return; 
     },
     'bootstrap' => ['log'],
@@ -66,6 +66,8 @@ $config = [
         ],
         'formatter' => [
             'datetimeFormat' => 'yyyy-MM-dd HH:mm:ss',
+            'dateFormat' => 'yyyy-MM-dd',
+            'timeFormat' => 'HH:mm',
         ],
         'db' => require(__DIR__ . '/db.php'),
     ],

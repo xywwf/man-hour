@@ -12,6 +12,7 @@ use yii\web\AssetBundle;
  */
 class DateTimePickerAsset extends AssetBundle
 {
+    public $language = "en-US";
     public $basePath = '@webroot';
     public $baseUrl = '@web';    
     public $css = [
@@ -19,5 +20,24 @@ class DateTimePickerAsset extends AssetBundle
     ];
     public $js = [
         'js/jquery-ui-timepicker-addon.js'
-    ];    
+    ];
+    
+    /**
+     * @inheritdoc
+     */
+    public $depends = [
+        '\yii\jui\JuiAsset',
+    ];
+    
+    /**
+     * @inheritdoc
+     */
+    public function registerAssetFiles($view)
+    {
+        if ( $this->language === "zh-CN" ) {
+            $this->js[] = "js/datetimepicker-zh-CN.js";
+        }
+        parent::registerAssetFiles($view);
+    }
+    
 }

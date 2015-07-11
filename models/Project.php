@@ -19,11 +19,35 @@ use Yii;
  */
 class Project extends \yii\db\ActiveRecord
 {
+    const STATE_NORMAL   = 0;
+    const STATE_FINISHED = 1;
+    const STATE_CLOSED   = 2;
+    
     public static $state_map = [
         '0' => '正常',
         '1' => '已完成',
         '2' => '关闭',
     ];
+    
+    private static $_id_name_map; // id<->name map of all project models
+    
+    public static function getIdNameMap()
+    {
+        if( !isset(self::$_id_name_map) ){
+            
+            $all = Project::find()->select(['id','name'])->andWhere(['state' => self::STATE_NORMAL])->orderBy('id')->asArray()->all();
+            if( count($all) )
+            {
+                self::$_id_name_map[''] = Yii::t('app','Please choose...');
+            }
+            
+            foreach ( $all as $pro ){
+                self::$_id_name_map[$pro['id']] = $pro['name'];
+            }
+        }
+        return self::$_id_name_map;
+    }
+    
     
     /**
      * @inheritdoc

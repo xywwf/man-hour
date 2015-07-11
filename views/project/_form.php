@@ -14,11 +14,6 @@ use app\models\Project;
         
     <?php Pjax::begin(['id'=>'pajx-form-0']); ?>
     <?php $form = ActiveForm::begin(['options' => [ 'data-pjax'=> true ]]); ?>
-
-    <?php 
-        //app\assets\JqueryFormAsset::register($this);
-        //$this->registerJs('$(document).ready(function() {var form = $("#'.$form->getId().'");form.ajaxForm();});', yii\web\View::POS_END);
-    ?>
     
     <table width="100%" style="margin-top: 20px">
         <tr>

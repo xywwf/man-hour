@@ -16,9 +16,8 @@ $page = Yii::$app->getRequest()->get('page');
 <div class="project-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php Pjax::begin(['id'=>'pjax-index-0']); ?>    
     <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <?php Pjax::begin(['id'=>'pjax-index-0']); ?>
     
     <p style="text-align: right">
         <?= Html::a(Yii::t('app', 'Delete selected projects'), ['deletes', 'page' => $page ], [
@@ -44,8 +43,7 @@ $page = Yii::$app->getRequest()->get('page');
                 ['class' => 'yii\grid\SerialColumn', 'headerOptions' => ['width' => '30' ]],
                 //[ 'attribute' => 'id', 'headerOptions' => ['width' => '90' ]],
                 [ 'attribute' => 'name', 'headerOptions' => ['width' => '150' ]],
-                [   'attribute' => 'description',
-                'headerOptions' => ['width' => '400' ],
+                [ 'attribute' => 'description','headerOptions' => ['width' => '400' ],
                 //'value' => function($model)
                 //{
                 //    return strlen($model->description) > 50 ?
@@ -90,39 +88,4 @@ $page = Yii::$app->getRequest()->get('page');
     <?php Pjax::end(); ?>
 </div>
 
-
-<?php $this->beginBlock('jsInView') ?>
-function fancybox(item){
-    $.fancybox({
-        'autoSize' : false,
-		'width'	   : 800,
-        'height'   : 500,
-        'padding'  : 40,
-        'href'     : $(item).attr('href'),
-		'type'     :'ajax',
-	});
-}
-
-function deleteSelected(item){
-    var ids = $(".grid-view").yiiGridView('getSelectedRows');
-    //alert('IDS:' + ids);
-    
-    if( ids.length <= 0 )
-    {
-        alert("<?= Yii::t('app', 'Please select at least one row to delete!') ?>");
-        return false;
-    }
-    
-    var r = confirm("<?= Yii::t('app', 'Please confirm to delete the selected rows?') ?>");
-    if( r )
-    {
-        var url = $(item).attr('href');
-        $(item).attr('href', url + (url.indexOf('?') >= 0 ? '&' : '?') + 'ids=' + ids);
-    }
-    return r;
-}
-<?php $this->endBlock() ?>
-<?php
-    newerton\fancybox\FancyBoxAsset::register($this);
-    $this->registerJs($this->blocks['jsInView'], yii\web\View::POS_END);
-?>
+<?php \app\G::registerViewJs($this); ?>

@@ -8,7 +8,7 @@ use yii\data\ActiveDataProvider;
 use app\models\Entry;
 
 /**
- * EntrySearch represents the model behind the search form about `app\models\Entry`.
+ * EntrySearch represents the model behind the search form about `\app\models\Entry`.
  */
 class EntrySearch extends Entry
 {
@@ -18,8 +18,8 @@ class EntrySearch extends Entry
     public function rules()
     {
         return [
-            [['id', 'user_id', 'project_id', 'update_user_id'], 'integer'],
-            [['start_time', 'end_time', 'description', 'update_time'], 'safe'],
+            [['id', 'user_id', 'project_id', 'update_user_id', 'type', 'state', 'ext'], 'integer'],
+            [['start_date', 'start_time', 'end_date', 'end_time', 'description', 'update_time', 'ext2'], 'safe'],
         ];
     }
 
@@ -59,13 +59,19 @@ class EntrySearch extends Entry
             'id' => $this->id,
             'user_id' => $this->user_id,
             'project_id' => $this->project_id,
+            'start_date' => $this->start_date,
             'start_time' => $this->start_time,
+            'end_date' => $this->end_date,
             'end_time' => $this->end_time,
             'update_time' => $this->update_time,
             'update_user_id' => $this->update_user_id,
+            'type' => $this->type,
+            'state' => $this->state,
+            //'ext' => $this->ext,
         ]);
 
         $query->andFilterWhere(['like', 'description', $this->description]);
+            //->andFilterWhere(['like', 'ext2', $this->ext2]);
 
         return $dataProvider;
     }

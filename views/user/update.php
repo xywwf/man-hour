@@ -5,10 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\MhUser */
 
-$this->title = Yii::t('app', 'Change user informations').':';
+$this->title = Yii::t('app', 'Modify user information').':';
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'User list'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->uid, 'url' => ['view', 'uid' => $model->uid]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Change');
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="mh-user-update">
 

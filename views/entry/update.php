@@ -5,10 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Entry */
 
-$this->title = 'Update Entry: ' . ' ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Entries', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = Yii::t('app', 'Modify manhour log');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Manhour logs'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="entry-update">
 

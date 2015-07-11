@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 use app\models\User;
 
 /* @var $this yii\web\View */
@@ -14,8 +15,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="mh-user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+ 
+    <?php Pjax::begin(['id'=>'pjax-index-0']); ?>   
+    
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
 
     <p style="text-align: right">
         <?= Html::a(Yii::t('app','+Add new user'), ['create'], [
@@ -36,10 +39,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [ 'attribute' => 'personal_name', 'headerOptions' => ['width' => '120' ]],            
             [
                 'attribute' => 'type',
-                'filter' => User::$type_map,
+                'filter' => User::getTypeMap(),
                 'value'  => function($model)
                 {
-                    return User::$type_map[$model->type];
+                    return User::typeMap($model->type);
                 },
                 'headerOptions' => ['width' => '100' ]
             ],
@@ -72,24 +75,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
-
+    <?php Pjax::end(); ?>
 </div>
 
-<?php 
-$js = <<<JS
-function fancybox(item){
-    $.fancybox({
-        'autoSize' : false,
-		'width'	   : 800,
-        'height'   : 500,
-        'padding'  : 40,
-        'href'     : $(item).attr('href'),
-		'type'     :'ajax',
-	});
-}
-JS;
-
-    newerton\fancybox\FancyBoxAsset::register($this);
-    $this->registerJs($js, yii\web\View::POS_END);
-?>
+<?php \app\G::registerViewJs($this); ?>
 

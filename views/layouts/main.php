@@ -17,7 +17,7 @@ AppAsset::register($this);
 <meta charset="<?= Yii::$app->charset ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode(Yii::t('app', Yii::$app->name).($this->title?" - ":"").$this->title) ?></title>
+    <title><?= Html::encode($this->title. ($this->title?" - ":"") . Yii::t('app', Yii::$app->name)) ?></title>
     <?php $this->head() ?>    
 </head>
 <body>
@@ -35,17 +35,18 @@ AppAsset::register($this);
             ]);
 
             
-            $navItems = [
-                ['label' => Yii::t('app', 'Home')  , 'url' => ['/site/index']],
-                ['label' => Yii::t('app', 'Man hour record'), 'url' => ['/entry/index']]
-            ];
+            $navItems = [['label' => Yii::t('app', 'Home')  , 'url' => ['/site/index']]];
             
-            //if( Yii::$app->user->isAdmin )
-            {
-                $navItems[] = ['label' => Yii::t('app', 'Project management'), 'url' => ['/project/index']];
-                $navItems[] = ['label' => Yii::t('app', 'User management'), 'url' => ['/user/index']];                
+            if (!Yii::$app->user->isGuest){
+                
+                $navItems[] =  ['label' => Yii::t('app', 'Manhour logs'), 'url' => ['/entry/index']];
+            
+                if( Yii::$app->user->identity->isAdmin() )
+                {
+                    $navItems[] = ['label' => Yii::t('app', 'Project management'), 'url' => ['/project/index']];
+                    $navItems[] = ['label' => Yii::t('app', 'User management'), 'url' => ['/user/index']];                
+                }
             }
-
             //$navItems[] = ['label' => '联系', 'url' => ['/site/contact']];
             
             $navItems[] = ['label' => 'En/中',
@@ -75,7 +76,7 @@ AppAsset::register($this);
             NavBar::end(); 
         ?>
 
-        <div class="container" sytle="">
+        <div class="container">
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             ]) ?>
@@ -91,15 +92,6 @@ AppAsset::register($this);
 	</footer>
 
 <?php $this->endBody() ?>
-
-<script type="text/javascript">
-$(document).ready(function()
-{
-	//$('input, textarea').placeholder();
-	//$(":input[placeholder]").placeholder();
-});
-</script>
-
 </body>
 </html>
 <?php $this->endPage() ?>

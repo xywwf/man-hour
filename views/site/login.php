@@ -25,14 +25,14 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
-    <?= $form->field($model, 'username')->textinput(['placeholder' => '请输入用户名'])->label(Yii::t('app', 'Username')) ?>
+    <?= $form->field($model, 'username')->textinput(['placeholder' => '请输入用户名']) ?>
 
-    <?= $form->field($model, 'password')->passwordInput()->label(Yii::t('app', 'Password')) ?>
+    <?= $form->field($model, 'password')->passwordInput() ?>
 
     <?= $form->field($model, 'rememberMe', [
         'template' => "<div class=\"col-lg-offset-1 col-lg-3\" width=\"200\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
         'labelOptions' => ['class' => 'col-lg-2 control-label'],
-    ])->label(Yii::t('app', 'Remember me'))->checkbox() ?>
+    ])->checkbox() ?>
 
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">

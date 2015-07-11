@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
 use app\models\User;
 
 /* @var $this yii\web\View */
@@ -11,13 +12,11 @@ use app\models\User;
 
 <div class="mh-user-form">
 
-    <?php $form = ActiveForm::begin( ['fieldConfig' => [
-            //'template' => "{label}\n<div class=\"col-lg-6\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            //'labelOptions' => ['class' => 'col-lg-4 control-label'],
-        ]]); ?>
+    <?php Pjax::begin(['id'=>'pajx-form-0']); ?>
+    <?php $form = ActiveForm::begin(['options' => [ 'data-pjax'=> true ]]); ?>
     
     <table width="100%" style="margin-top: 20px">
-        <tr><td><?= $form->field($model, 'type')->dropDownList(User::$type_map) ?></td></tr>
+        <tr><td><?= $form->field($model, 'type')->dropDownList(User::getTypeMap()) ?></td></tr>
         <tr>
             <td width="45%"><?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?></td>
             <td width="5%"></td>
@@ -73,5 +72,5 @@ use app\models\User;
     </div>
 
     <?php ActiveForm::end(); ?>
-
+    <?php Pjax::end(); ?>
 </div>

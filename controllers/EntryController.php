@@ -4,15 +4,16 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Entry;
-use app\models\EntrySearch;
+use app\models\ViewEntrySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Project;
 
 /**
  * EntryController implements the CRUD actions for Entry model.
  */
-class EntryController extends Controller
+class EntryController extends \app\MyController
 {
     public function behaviors()
     {
@@ -31,10 +32,17 @@ class EntryController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {
-        $searchModel = new EntrySearch();
+    {      
+        $searchModel = new ViewEntrySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        
+        if( $this->req('page') === 'last' )
+        {
+            $pagination = $dataProvider->getPagination();
+            $pagination->totalCount = $dataProvider->getTotalCount();
+            $pagination->setPage($pagination->totalCount, true);
+        }
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -61,9 +69,12 @@ class EntryController extends Controller
     public function actionCreate()
     {
         $model = new Entry();
+        $model->user_id = Yii::$app->user->identity->uid;
+        $model->update_user_id = $model->user_id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index', 'page' => 'last']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -80,14 +91,15 @@ class EntryController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $model->update_user_id = Yii::$app->user->identity->uid;
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
+            //return $this->redirect(['view', 'id' => $model->id]);
+        } 
+        
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**

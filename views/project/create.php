@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Project */
 
-$this->title = Yii::t('app', 'Add new project');
+$this->title = Yii::t('app', '+Add new project');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Project management'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

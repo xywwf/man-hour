@@ -109,8 +109,23 @@ class DateTimePicker extends \yii\jui\InputWidget
      */
     public function run()
     {
+        $this->registerFormat();
+        
         Html::addCssStyle($this->options, ['z-index' => 9000,], false);
         Html::addCssClass($this->options, 'form-control');
+        
+        if( $this->hasModel() ) {
+            $this->value = Html::getAttributeValue($this->model, $this->attribute);
+        }
+        
+        if( isset($this->value) ){
+            $this->value = Yii::$app->formatter->format($this->value, [$this->type, $this->format]);
+        }
+        
+        if( $this->hasModel() ){
+            $this->options['value'] = $this->value;
+        }
+        
         $input = $this->hasModel()
             ? Html::activeTextInput($this->model, $this->attribute, $this->options)
             : Html::textInput($this->name, $this->value, $this->options);
@@ -158,7 +173,7 @@ class DateTimePicker extends \yii\jui\InputWidget
     }
 
     protected function registerFormat()
-    {
+    {        
         $format = $this->format;
         if ($format === null) {
             switch ($this->type) {
@@ -175,15 +190,12 @@ class DateTimePicker extends \yii\jui\InputWidget
         }
         
         if (is_string($format)) {
-            if (strncmp($format, 'php:', 4) === 0) {
-                $format = FormatConverter::convertDatePhpToJui(substr($format, 4));
-            } else {
-                $format = FormatConverter::convertDateIcuToJui($format, $this->type, $this->language);
-            }
-            
-            $this->clientOptions['format'] = $format;            
+            $this->clientOptions['format'] = $format;
             if( !isset($this->clientOptions['timeFormat']) ) {
-                $this->clientOptions['timeFormat'] = "HH:mm:ss";
+                if( $this->type === self::TYPE_TIME )
+                {
+                    $this->clientOptions['timeFormat'] = $format;
+                }
             }
         }
     }
@@ -196,37 +208,42 @@ class DateTimePicker extends \yii\jui\InputWidget
     {
         $view = $this->getView();
 
-        $assetBundle = \yii\jui\DatePickerLanguageAsset::register($view);
-        $assetBundle->language = $this->language;        
-        \app\assets\DateTimePickerAsset::register($view);
-
-        $this->registerFormat();
-        
+        $assetBundle = \app\assets\DateTimePickerAsset::register($view);
+        $assetBundle->language = $this->language;
+               
         $id = $this->options['id'];
 
         $selector = "jQuery('#$id')";
-        //if ($addon) {
-        //    $selector .= '.closest(".input-group.date")';
-        //}
 
         if ($this->clientOptions !== false) {
             
-            //if( !isset($this->clientOptions['showTimepicker']) )
-            //{
-            //    $this->clientOptions['showTimepicker'] = false;
-            //}
+            switch ($this->type) {
+                case self::TYPE_DATE:
+                    if( !isset($this->clientOptions['showTime']) ){
+                        $this->clientOptions['showTimepicker'] = false;
+                    }
+                    break;
+                case self::TYPE_TIME:
+                    if( !isset($this->clientOptions['timeOnly'])){
+                        $this->clientOptions['timeOnly'] = true;
+                    }
+                    break;
+                case self::TYPE_DATETIME:
+                    break;
+            }
             
             $options = empty($this->clientOptions) ? '' : Json::htmlEncode($this->clientOptions);
             $language = Html::encode($this->language);
             $js = "$selector.datetimepicker($.extend({}, $.datepicker.regional['{$language}'], $options))";
             
             if ($addon) {
-                $js .=  ".siblings('.datepickerbutton').on('click', function(){
-                            $selector.focus();
-                         })
-                        .siblings('.clearbutton').on('click', function() {
-                            $selector.val('');
-                        });";
+                $js .=  
+".siblings('.datepickerbutton').on('click', function(){
+    $selector.focus();
+ })
+.siblings('.clearbutton').on('click', function() {
+    $selector.val('');
+});";
             }
 
             $view->registerJs($js);

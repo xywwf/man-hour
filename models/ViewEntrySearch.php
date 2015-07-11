@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Project;
+use app\models\ViewEntry;
 
 /**
- * ProjectSearch represents the model behind the search form about `app\models\Project`.
+ * ViewEntrySearch represents the model behind the search form about `app\models\ViewEntry`.
  */
-class ProjectSearch extends Project
+class ViewEntrySearch extends ViewEntry
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class ProjectSearch extends Project
     public function rules()
     {
         return [
-            [['id', 'state'], 'integer'],
-            [['name', 'start_time', 'target_time', 'end_time', 'description'], 'safe'],
+            [['id', 'user_id', 'project_id', 'update_user_id'], 'integer'],
+            [['personal_name', 'project_name', 'start_date', 'start_time', 'end_date', 'end_time', 'description', 'update_time', 'update_user_name'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class ProjectSearch extends Project
      */
     public function search($params)
     {
-        $query = Project::find();
+        $query = ViewEntry::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,14 +57,20 @@ class ProjectSearch extends Project
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'state' => $this->state,
+            'user_id' => $this->user_id,
+            'project_id' => $this->project_id,
+            'start_date' => $this->start_date,
             'start_time' => $this->start_time,
-            'target_time' => $this->target_time,
+            'end_date' => $this->end_date,
             'end_time' => $this->end_time,
+            'update_time' => $this->update_time,
+            'update_user_id' => $this->update_user_id,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'description', $this->description]);
+        $query->andFilterWhere(['like', 'personal_name', $this->personal_name])
+            ->andFilterWhere(['like', 'project_name', $this->project_name])
+            ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'update_user_name', $this->update_user_name]);
 
         return $dataProvider;
     }

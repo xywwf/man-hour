@@ -31,13 +31,41 @@ use Yii;
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
     //public $password;
+    const TYPE_INIT         = 0;
+    const TYPE_SUPERADMIN   = 1;
+    const TYPE_ADMIN        = 2;
+    const TYPE_NORMAL       = 3;
+    const TYPE_CLOSED       = 4;
     
-    public static $type_map = [
-        '0' => '超级管理员',
-        '1' => '管理员',
-        '2' => '普通员工',
-        '3' => '已禁用员工',
-    ];
+    private static $_type_map = [];
+
+    public static function getTypeMap()
+    {
+        if( count( self::$_type_map ) <= 0 )
+        {  
+            self::$_type_map = [
+                self::TYPE_INIT       => 'Uninitialized',
+                self::TYPE_SUPERADMIN => 'Super admin',
+                self::TYPE_ADMIN      => 'Administrator',
+                self::TYPE_NORMAL     => 'Normal user',
+                self::TYPE_CLOSED     => 'Closed user',
+            ];
+            
+            array_walk( self::$_type_map, "\app\G::array_t" );
+        }
+        
+        return self::$_type_map;
+    }
+
+    public static function typeMap($key)
+    {
+        $a = self::getTypeMap();
+        if( array_key_exists($key, $a) ){
+            return $a[$key];
+        }
+        
+        return $a[0];
+    }
     
     /**
      * @inheritdoc
@@ -47,6 +75,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return 'mh_user_info';
     }
 
+    public function isAdmin()
+    {
+        return $this->type == self::TYPE_SUPERADMIN || $this->type == self::TYPE_ADMIN;
+    }
+    
     /**
      * @inheritdoc
      */
