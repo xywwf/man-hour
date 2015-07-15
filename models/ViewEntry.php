@@ -14,8 +14,8 @@ use Yii;
  * @property string $project_name
  * @property string $start_date
  * @property string $start_time
- * @property string $end_date
  * @property string $end_time
+ * @property string $duration
  * @property string $description
  * @property string $update_time
  * @property string $update_user_id
@@ -26,7 +26,7 @@ use Yii;
  * @property string $ext2
  */
 class ViewEntry extends \yii\db\ActiveRecord
-{
+{   
     /**
      * @inheritdoc
      */
@@ -47,8 +47,8 @@ class ViewEntry extends \yii\db\ActiveRecord
     {
         return [
             [['id', 'user_id', 'project_id', 'update_user_id','type', 'state','ext'], 'integer'],
-            [['user_id', 'project_id', 'start_date', 'start_time', 'end_time', 'update_user_id'], 'required'],
-            [['start_date', 'start_time', 'end_date', 'end_time', 'update_time'], 'safe'],
+            [['user_id', 'project_id', 'start_date', 'duration', 'update_user_id'], 'required'],
+            [['start_date', 'start_time', 'start_time', 'duration', 'update_time'], 'safe'],
             [['personal_name', 'update_user_name'], 'string', 'max' => 24],
             [['project_name'], 'string', 'max' => 64],
             [['description'], 'string', 'max' => 500],
@@ -69,8 +69,8 @@ class ViewEntry extends \yii\db\ActiveRecord
             'project_name' => Yii::t('app', 'Project name'),
             'start_date' => Yii::t('app', 'Date'),
             'start_time' => Yii::t('app', 'Start'),
-            'end_date' => Yii::t('app', 'End Date'),
             'end_time' => Yii::t('app', 'End'),
+            'duration' => Yii::t('app', 'Duration'),
             'description' => Yii::t('app', 'Working description'),
             'update_time' => Yii::t('app', 'Last updated time'),
             'update_user_id' => Yii::t('app', 'Last updated by'),

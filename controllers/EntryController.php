@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\G;
 use app\models\Entry;
 use app\models\ViewEntrySearch;
 use yii\web\Controller;
@@ -72,14 +73,16 @@ class EntryController extends \app\MyController
         $model->user_id = Yii::$app->user->identity->uid;
         $model->update_user_id = $model->user_id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->redirect(['index', 'page' => 'last']);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()){
+                G::flash('success', 'Save successfully!');
+                return $this->redirect(['index', 'page' => 'last']);                
+            } else {
+                G::flash('error', 'Save unsuccessfully!');
+            }
+        } 
+        
+        return $this->render('create', ['model' => $model,]);
     }
 
     /**
@@ -93,9 +96,13 @@ class EntryController extends \app\MyController
         $model = $this->findModel($id);
         $model->update_user_id = Yii::$app->user->identity->uid;
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->id]);
-        } 
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()){
+                G::flash('success', 'Save successfully!');
+            } else {
+                G::flash('error', 'Save unsuccessfully!');
+            }
+        }
         
         return $this->render('update', [
             'model' => $model,
@@ -110,7 +117,11 @@ class EntryController extends \app\MyController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if ($this->findModel($id)->delete()){
+            G::flash('success', 'Delete successfully!');
+        } else {
+            G::flash('error', 'Delete unsuccessfully!');
+        }
 
         return $this->redirect(['index']);
     }

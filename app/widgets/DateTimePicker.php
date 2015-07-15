@@ -113,13 +113,28 @@ class DateTimePicker extends \yii\jui\InputWidget
         
         Html::addCssStyle($this->options, ['z-index' => 9000,], false);
         Html::addCssClass($this->options, 'form-control');
-        
-        if( $this->hasModel() ) {
-            $this->value = Html::getAttributeValue($this->model, $this->attribute);
+
+        if( !isset($this->value) )
+        {
+            if( isset($this->options['value']) )
+            {
+                $this->value = $this->options['value'];
+            }
+            elseif( $this->hasModel() )
+            {
+                try {
+                    $this->value = Html::getAttributeValue($this->model, $this->attribute);  
+                } catch ( UnknownPropertyException $ex ) {
+                    //ignore this exception
+                }          
+            }
         }
-        
-        if( isset($this->value) ){
+
+        if( isset($this->value) ) {
             $this->value = Yii::$app->formatter->format($this->value, [$this->type, $this->format]);
+        }
+        else {
+            $this->value = '';
         }
         
         if( $this->hasModel() ){

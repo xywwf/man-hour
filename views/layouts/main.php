@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\bootstrap\Alert;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
@@ -80,6 +81,24 @@ AppAsset::register($this);
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             ]) ?>
+            <?php 
+                if( Yii::$app->getSession()->hasFlash('success') ) {                   
+                    echo Alert::widget([
+                        'options' => [
+                            'class' => 'alert-success', //这里是提示框的class
+                        ],
+                        'body' => Yii::$app->getSession()->getFlash('success'), //消息体
+                    ]);
+                }
+                elseif( Yii::$app->getSession()->hasFlash('error') ) {
+                    echo Alert::widget([
+                        'options' => [
+                            'class' => 'alert-danger',
+                        ],
+                        'body' => Yii::$app->getSession()->getFlash('error'),
+                    ]);
+                }
+            ?>
             <?= $content ?>
         </div>
 	</div>

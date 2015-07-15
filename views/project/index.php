@@ -16,6 +16,7 @@ $page = Yii::$app->getRequest()->get('page');
 <div class="project-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    
     <?php Pjax::begin(['id'=>'pjax-index-0']); ?>    
     <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
     

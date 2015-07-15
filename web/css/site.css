@@ -100,6 +100,16 @@ a.desc:after {
 	word-wrap:break-word;
 }
 
+.form-table {
+	width: 100%;
+	margin-top: 20px;
+}
+
+.form-table td {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 .hint-block {
     display: block;
     margin-top: 5px;
@@ -117,4 +127,37 @@ a.desc:after {
 .btn {
 	margin: 10px;
 }
+
+.prettyprint {
+	position: relative;
+	background: #f7f7f7;
+	color: #333;
+	font: normal 12px/1.5 "Courier New",Consola,SimSun;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	-moz-box-shadow: 0 2px 4px #999;
+	-webkit-box-shadow: 0 2px 4px #999;
+	box-shadow: 0 2px 4px #999;
+	border: solid 1px #999;
+	padding: 10px;
+	margin: 0 0 20px 0;
+	overflow: auto;
+}
+
+h1 {
+	background: #f7f7f7;
+	color: #303080;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	-moz-box-shadow: 0 1px 2px #aaaaaa;
+	-webkit-box-shadow: 0 1px 2px #aaaaaa;
+	box-shadow: 0 1px 2px #aaaaaa;
+	border: solid 1px #dddddd;
+	padding: 5px 15px 5px 15px;
+	margin: 0 0 20px 0;
+	overflow: auto;
+}
+
 }

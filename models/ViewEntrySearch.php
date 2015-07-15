@@ -19,7 +19,7 @@ class ViewEntrySearch extends ViewEntry
     {
         return [
             [['id', 'user_id', 'project_id', 'update_user_id'], 'integer'],
-            [['personal_name', 'project_name', 'start_date', 'start_time', 'end_date', 'end_time', 'description', 'update_time', 'update_user_name'], 'safe'],
+            [['personal_name', 'project_name', 'start_date', 'start_time', 'description', 'update_time', 'update_user_name'], 'safe'],
         ];
     }
 
@@ -59,12 +59,10 @@ class ViewEntrySearch extends ViewEntry
             'id' => $this->id,
             'user_id' => $this->user_id,
             'project_id' => $this->project_id,
-            'start_date' => $this->start_date,
-            'start_time' => $this->start_time,
-            'end_date' => $this->end_date,
-            'end_time' => $this->end_time,
-            'update_time' => $this->update_time,
-            'update_user_id' => $this->update_user_id,
+            //'start_date' => $this->start_date,
+            //'start_time' => $this->start_time,
+            //'update_time' => $this->update_time,
+            //'update_user_id' => $this->update_user_id,
         ]);
 
         $query->andFilterWhere(['like', 'personal_name', $this->personal_name])

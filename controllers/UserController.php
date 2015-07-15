@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\G;
 use app\models\User;
 use app\models\UserSearch;
 use yii\web\NotFoundHttpException;
@@ -69,14 +70,16 @@ class UserController extends \app\MyController
         $model = new User();
         $model->type = User::TYPE_NORMAL;
 
-        if ($model->load(Yii::$app->request->post()) && $model->saveUserAndAuth()) {
-            return $this->redirect(['index', 'page' => 'last']);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->saveUserAndAuth()){
+                G::flash('success', 'Save successfully!');
+                return $this->redirect(['index', 'page' => 'last']);
+            } else {
+                G::flash('error', 'Save unsuccessfully!');
+            }
         }
         
+        return $this->render('create', ['model' => $model,]);        
     }
 
     /**
@@ -87,15 +90,19 @@ class UserController extends \app\MyController
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->saveUserAndAuth()) {
-            //return $this->redirect(['index']);
+        $model = $this->findModel($id);       
+        
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->saveUserAndAuth()){
+                G::flash('success', 'Save successfully!');
+            } else {
+                G::flash('error', 'Save unsuccessfully!');
+            }
         }
         
         return $this->render('update', [
             'model' => $model,
-        ]);
+        ]);        
     }
 
     /**
@@ -109,6 +116,9 @@ class UserController extends \app\MyController
         
         $model->password = Yii::$app->params['defaultPassword'];   
         if( $model->saveUserAndAuth() ) {
+            G::flash('success', 'Save successfully!');            
+        }else {
+            G::flash('error', 'Save unsuccessfully!');
         }
     
         return $this->render('update', [
@@ -134,7 +144,11 @@ class UserController extends \app\MyController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if ($this->findModel($id)->delete()){
+            G::flash('success', 'Delete successfully!');            
+        }else{
+            G::flash('error', 'Delete unsuccessfully!');
+        }
 
         return $this->redirect(['index']);
     }
@@ -147,7 +161,11 @@ class UserController extends \app\MyController
      */
     public function actionDeletes($ids)
     {
-        User::deleteAll(['in', 'id', explode(',', $ids)]);
+        if (User::deleteAll(['in', 'id', explode(',', $ids)])){
+            G::flash('success', 'Delete successfully!');
+        }else{
+            G::flash('error', 'Delete unsuccessfully!');
+        }
     
         return $this->redirect(['index', 'page' => $this->req('page')]);
     }    

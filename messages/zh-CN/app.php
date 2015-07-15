@@ -68,6 +68,7 @@ return [
     'Manhour log ID' => '工时记录ID',
     'Date' => '日期',
     'Start' => '开始',
+    'Duration' => '时长',
     'End' => '结束',
     'Working description' => '工作内容描述',
     'Last updated by user name' => '更新人员姓名',
@@ -94,9 +95,10 @@ return [
     'Delete selected projects' => '删除所选项目',
     'Please select at least one row to delete!' => '您还没有选择要删除的行！',
     'Please confirm to delete the selected rows?' => '请确认您要删除这些行数据？',
-    
-
-    
+    'Save successfully!' => '保存成功！',
+    'Save unsuccessfully!' => '保存失败！',
+    'Delete successfully!' => '删除成功！',
+    'Delete unsuccessfully!' => '删除失败！',    
     //'{attribute} must be no greater than {max}.' => '{attribute}的值必须不大于{max}。',
     //'{delta, plural, =1{an hour} other{# hours}} ago' => '{delta}小时前',
 ];

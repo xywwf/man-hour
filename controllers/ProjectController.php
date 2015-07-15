@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\G;
 use app\models\Project;
 use app\models\ProjectSearch;
 use yii\web\NotFoundHttpException;
@@ -69,13 +70,17 @@ class ProjectController extends  \app\MyController
     {
         $model = new Project();
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'page' => 'last']);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()){
+                //G::flash('success', 'Save successfully!');
+                G::flash('error', 'Save unsuccessfully!');
+                return $this->redirect(['index', 'page' => 'last']);
+            } else {
+                G::flash('error', 'Save unsuccessfully!');
+            }
         }
+        
+        return $this->render('create', ['model' => $model,]);        
     }
 
     /**
@@ -88,17 +93,18 @@ class ProjectController extends  \app\MyController
     {
         $model = $this->findModel($id);
         
-        if ($model->load(Yii::$app->request->post()) && $model->save() ) {
-            //Yii::$app->getSession()->setFlash('success', '保存成功！');
-            //return "Save successfully!";
-            //var_dump(Yii::$app->request);
-            //return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()){
+                G::flash('error', 'Save unsuccessfully!');
+                //G::flash('success', 'Save successfully!');
+            } else {
+                G::flash('error', 'Save unsuccessfully!');
+            }
         }
-       
+        
         return $this->render('update', [
             'model' => $model,
-        ]);
-        
+        ]);       
     }
 
     
@@ -110,7 +116,11 @@ class ProjectController extends  \app\MyController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if ($this->findModel($id)->delete()){
+            G::flash('success', 'Delete successfully!');
+        }else{
+            G::flash('error', 'Delete unsuccessfully!');
+        }
 
         return $this->redirect(['index']);
     }
@@ -123,7 +133,11 @@ class ProjectController extends  \app\MyController
      */
     public function actionDeletes($ids)
     {
-        Project::deleteAll(['in', 'id', explode(',', $ids)]);
+        if (Project::deleteAll(['in', 'id', explode(',', $ids)])){
+            G::flash('success', 'Delete successfully!');
+        }else{
+            G::flash('error', 'Delete unsuccessfully!');
+        }
     
         return $this->redirect(['index', 'page' => $this->req('page')]);
     }

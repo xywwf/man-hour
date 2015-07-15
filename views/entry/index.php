@@ -45,9 +45,14 @@ $page = Yii::$app->getRequest()->get('page');
             //'personal_name',
             [ 'attribute' => 'project_name', 'headerOptions' => ['width' => '150' ]],
             [ 'attribute' => 'start_date', 'headerOptions' => ['width' => '100' ]],
-            [ 'attribute' => 'start_time', 'headerOptions' => ['width' => '80' ], 'format' => ['time', 'HH:mm'], 'filter' => false ],
-            // 'end_date',
-            [ 'attribute' => 'end_time', 'headerOptions' => ['width' => '80' ], 'format' => ['time', 'HH:mm'], 'filter' => false],            
+            [ 'attribute' => 'start_time', 'headerOptions' => ['width' => '60' ], 'format' => ['time', 'HH:mm'], 'filter' => false ],
+            [ 'attribute' => 'end_time', 'headerOptions' => ['width' => '60' ], 'format' => ['time', 'HH:mm'], 'filter' => false ],
+            [ 'attribute' => 'duration', 'headerOptions' => ['width' => '60' ], 'filter' => false,
+              'value' => function($model){
+               $mins = $model->duration / 60;
+               return sprintf('%02d', $mins / 60) .':' . sprintf('%02d', $mins % 60);
+            }
+            ],            
             [ 'attribute' => 'description', 'headerOptions' => ['width' => '400' ]],            
             // 'update_time',
             // 'update_user_id',

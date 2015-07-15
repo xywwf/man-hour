@@ -9,11 +9,15 @@ class G
     public static function array_t(&$value, $key, $extra=null){
         $value = Yii::t('app', $value);
     }
-    
+
+    public static function flash($key, $value = true, $removeAfterAccess = true)
+    {
+        Yii::$app->getSession()->setFlash($key, Yii::t('app',$value), $removeAfterAccess);
+    }    
 
     public static function registerViewJs($view, $options = [])
     {
-        $width  = isset($options['width'])  ? $options['width'] : '800';
+        $width  = isset($options['width'])  ? $options['width'] : '600';
         $height = isset($options['height']) ? $options['height'] : '500';
     
 $js = "
