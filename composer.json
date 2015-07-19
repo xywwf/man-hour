@@ -22,7 +22,8 @@
         "newerton/yii2-fancybox": "dev-master",
         "yiisoft/yii2-jui": "2.0.4",
         "bower-asset/jquery-form": "3.51",
-        "bower-asset/echarts": "*"
+        "bower-asset/echarts": "*",
+        "bower-asset/zrender": "~2.1.1"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

@@ -15,6 +15,24 @@ class G
         Yii::$app->getSession()->setFlash($key, Yii::t('app',$value), $removeAfterAccess);
     }    
 
+    public static function isZh()
+    {
+        return Yii::$app->language == 'zh-CN';
+    }
+    
+    public static function isEn()
+    {
+        return Yii::$app->language == 'en-US';
+    }
+    
+    public static function showDateFull($date)
+    {    
+        static $weekdays_zh = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+        
+        $week = static::isZh() ? $weekdays_zh[date('w', $date)] :  date('l', $date);
+        return \Yii::$app->formatter->asDate( $date, 'yyyy-MM-dd HH:mm:ss z ') . $week;
+    }
+    
     public static function registerViewJs($view, $options = [])
     {
         $width  = isset($options['width'])  ? $options['width'] : '600';

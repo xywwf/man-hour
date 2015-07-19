@@ -68,6 +68,8 @@ $config = [
             'datetimeFormat' => 'yyyy-MM-dd HH:mm:ss',
             'dateFormat' => 'yyyy-MM-dd',
             'timeFormat' => 'HH:mm',
+            'timeZone' => 'Asia/Shanghai',
+            'defaultTimeZone' => 'Asia/Shanghai',
         ],
         'db' => require(__DIR__ . '/db.php'),
     ],

@@ -15,6 +15,12 @@ class ViewEntryQuery extends \yii\db\ActiveQuery
         return $this;
     }*/
 
+    public function statisticsByProjectAndDate($uid)
+    {
+        $this->andWhere(['user_id'=>$uid]);
+        return $this;
+    }
+    
     /**
      * @inheritdoc
      * @return ViewEntry[]|array

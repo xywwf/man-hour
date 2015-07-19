@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a2e3fa6f280dcfb239f5df01103d5070",
+    "hash": "c3265f395f389f174cdce99e50a9d0da",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -53,6 +53,44 @@
                 "mobile-first",
                 "responsive",
                 "web"
+            ]
+        },
+        {
+            "name": "bower-asset/echarts",
+            "version": "2.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ecomfe/echarts.git",
+                "reference": "6b8053d660c330f56aa08e8e8f67db6db61ec4b1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ecomfe/echarts/zipball/6b8053d660c330f56aa08e8e8f67db6db61ec4b1",
+                "reference": "6b8053d660c330f56aa08e8e8f67db6db61ec4b1",
+                "shasum": ""
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "build/dist/echarts.js"
+                ],
+                "bower-asset-ignore": [
+                    "**/.*",
+                    "node_modules",
+                    "bower_components",
+                    "test",
+                    "doc"
+                ]
+            },
+            "license": [
+                "BSD"
+            ],
+            "description": "Enterprise Charts 【Baidu Hi : 1379172 | Email : echarts@baidu.com】",
+            "keywords": [
+                "baidu",
+                "canvas",
+                "data visualization",
+                "echarts"
             ]
         },
         {
@@ -356,6 +394,22 @@
             "license": [
                 "MIT"
             ]
+        },
+        {
+            "name": "bower-asset/zrender",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ecomfe/zrender.git",
+                "reference": "be8cb472dd212aed42041fe9072e24ae117847a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ecomfe/zrender/zipball/be8cb472dd212aed42041fe9072e24ae117847a7",
+                "reference": "be8cb472dd212aed42041fe9072e24ae117847a7",
+                "shasum": ""
+            },
+            "type": "bower-asset-library"
         },
         {
             "name": "cebe/markdown",

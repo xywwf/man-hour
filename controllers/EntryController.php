@@ -5,11 +5,14 @@ namespace app\controllers;
 use Yii;
 use app\G;
 use app\models\Entry;
+use app\models\ViewEntry;
 use app\models\ViewEntrySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Project;
+use yii\helpers\Html;
+use yii\helpers\Json;
 
 /**
  * EntryController implements the CRUD actions for Entry model.
@@ -50,6 +53,43 @@ class EntryController extends \app\MyController
         ]);
     }
 
+    /**
+     * Return the statistics of manhour enties in json format for a given one week date.
+     * This should be a ajax request.
+     * @return mixed
+     */
+    public function actionStatisticsByDate($last_date)
+    {
+        $days = intval($this->req('days', 7)); //one week
+        if( $days <= 0 ) {
+            throw new InvalidParamException("Days must bigger than 0");
+        }
+
+        $uid = Yii::$app->user->identity->uid;
+        $first_date = date( 'Y-m-d', strtotime( '-'.($days-1).' days' ,strtotime($last_date)));
+
+        //reuse the id as the day index starting from 'first_day'
+        $models = ViewEntry::find()->select(['project_id', 'project_name', 'DATEDIFF(start_date, "'.$first_date.'") as id', 'sum(duration) as duration'])
+            ->where(['user_id'=>$uid])->andWhere(['between', 'start_date', $first_date, $last_date ])
+            ->groupBy(['project_id', 'start_date'])
+            //->orderBy('project_id, start_date')
+            ->all();
+        
+        $series = [[ 'data' => array_fill(0, $days, 0) ]];
+        foreach( $models as $model )
+        {
+            $project_id = $model->project_id; //start from '1' as '0' is for the project count
+            if( !array_key_exists($model->project_id, $series) ){
+                $series[$model->project_id] = [ 'name' => $model->project_name, 'data' => array_fill(0, $days, 0) ];
+            }
+            $series[$model->project_id]['data'][$model->id] = round($model->duration / 36 ) / 100; //保留两位小数
+            $series[0]['data'][$model->id]++; 
+        }
+
+        echo json_encode(array_merge($series));
+    }    
+    
+    
     /**
      * Displays a single Entry model.
      * @param string $id

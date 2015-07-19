@@ -17,6 +17,23 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
+    //Login page
+    'Welcome to ' => '欢迎使用',
+    'Geely Auto (Shanghai) manhour system' => '吉利汽车（上海）工时管理系统',
+    'Geely Auto (Shanghai) ' => '吉利汽车（上海）',
+    'Home' => '首页',
+    'Manhour logs' => '工时记录',
+    'User management' => '用户管理',
+    'Login' => '登录',
+    'Logout' => '登出',
+    'Remember me' => '记住我',
+    'Incorrect username or password!' => '用户名或密码不正确！',
+    
+    //index page
+    'Working hour statistics in one week' => '一周工时统计图表',
+    'Working project number' => '当天工作的项目总数',
+    'Working time(Hour)' => '工作时间(小时)',
+    
     //User table
     'User ID' => '用户ID',
     'User type' => '用户类型',
@@ -76,19 +93,6 @@ return [
         
     '+Add a manhour log'   => '+登记新工时',
     'Delete selected logs' => '删除所选记录',    
-    
-    
-    //Login page
-    'Welcome to ' => '欢迎使用',
-    'Geely Auto (Shanghai) manhour system' => '吉利汽车（上海）工时管理系统',
-    'Geely Auto (Shanghai) ' => '吉利汽车（上海）',
-    'Home' => '首页',
-    'Manhour logs' => '工时记录',
-    'User management' => '用户管理',
-    'Login' => '登录',
-    'Logout' => '登出',
-    'Remember me' => '记住我',
-    'Incorrect username or password!' => '用户名或密码不正确！',
     
     //Other
     'Please choose...' => '请选择...',

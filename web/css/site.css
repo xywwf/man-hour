@@ -43,6 +43,7 @@ body {
 .jumbotron {
     text-align: center;
     background-color: transparent;
+	padding-top: 20px;
 }
 
 .jumbotron .btn {
@@ -53,6 +54,10 @@ body {
 .not-set {
     color: #c55;
     font-style: italic;
+}
+
+.highcharts-contextmenu hr {
+	margin: 5px;
 }
 
 /* add sorting icons to gridview sort links */
