@@ -15,6 +15,12 @@ class UserQuery extends \yii\db\ActiveQuery
         return $this;
     }*/
 
+    public function normal()
+    {
+        $this->andWhere(['type' => User::TYPE_NORMAL]);
+        return $this;        
+    }
+    
     /**
      * @inheritdoc
      * @return User[]|array

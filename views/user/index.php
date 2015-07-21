@@ -11,6 +11,7 @@ use app\models\User;
 
 $this->title = Yii::t('app','User list');
 $this->params['breadcrumbs'][] = $this->title;
+$page = Yii::$app->getRequest()->get('page');
 ?>
 <div class="mh-user-index">
 
@@ -21,6 +22,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p style="text-align: right">
+        <?= Html::a(Yii::t('app', 'Synchronize user list'), '#', [
+            'class' => 'btn btn-success', 
+            //'onclick' => 'return deleteSelected(this);',
+            'data-pjax' => '0',
+        ]) ?>    
+        <?= Html::a(Yii::t('app', 'Batch delete users'), ['deletes', 'page' => $page ], [
+            'class' => 'btn btn-success', 
+            'onclick' => 'return deleteSelected(this);',
+            'data-pjax' => '0',
+        ]) ?>
         <?= Html::a(Yii::t('app','+Add new user'), ['create'], [
             'class' => 'btn btn-success', 
             'onclick' => 'fancybox(this); return false;'

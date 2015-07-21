@@ -21,7 +21,7 @@ $page = Yii::$app->getRequest()->get('page');
     <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
     
     <p style="text-align: right">
-        <?= Html::a(Yii::t('app', 'Delete selected projects'), ['deletes', 'page' => $page ], [
+        <?= Html::a(Yii::t('app', 'Batch delete projects'), ['deletes', 'page' => $page ], [
             'class' => 'btn btn-success', 
             'onclick' => 'return deleteSelected(this);',
             'data-pjax' => '0',

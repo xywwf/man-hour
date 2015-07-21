@@ -29,10 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $form->field($model, 'password')->passwordInput() ?>
 
-    <?= $form->field($model, 'rememberMe', [
-        'template' => "<div class=\"col-lg-offset-1 col-lg-3\" width=\"200\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-        'labelOptions' => ['class' => 'col-lg-2 control-label'],
-    ])->checkbox() ?>
+    <?= $form->field($model, 'rememberMe')->checkbox(['style' => "margin-left: 50px;"]) ?>
 
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">
@@ -41,8 +38,4 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <?php ActiveForm::end(); ?>
-
-    <div class="col-lg-offset-1" style="color:#999;">
-        You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-    </div>
 </div>

@@ -40,12 +40,13 @@ AppAsset::register($this);
             
             if (!Yii::$app->user->isGuest){
                 
-                $navItems[] =  ['label' => Yii::t('app', 'Manhour logs'), 'url' => ['/entry/index']];
+                $navItems[] =  ['label' => Yii::t('app', 'Manhour'), 'url' => ['/entry/index']];
             
                 if( Yii::$app->user->identity->isAdmin() )
                 {
-                    $navItems[] = ['label' => Yii::t('app', 'Project management'), 'url' => ['/project/index']];
-                    $navItems[] = ['label' => Yii::t('app', 'User management'), 'url' => ['/user/index']];                
+                    $navItems[] =  ['label' => Yii::t('app', 'Export'), 'url' => ['/entry/export']];
+                    $navItems[] = ['label' => Yii::t('app', 'Project'), 'url' => ['/project/index']];
+                    $navItems[] = ['label' => Yii::t('app', 'User'), 'url' => ['/user/index']];                
                 }
             }
             //$navItems[] = ['label' => '联系', 'url' => ['/site/contact']];

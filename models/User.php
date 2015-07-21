@@ -131,6 +131,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return $this->hasMany(Entry::className(), ['user_id' => 'uid']);
     }
+    
+    public function getEntriesCount()
+    {
+        return $this->hasMany(Entry::className(), ['user_id' => 'uid'])->count();
+    }
 
     /**
      * @return \yii\db\ActiveQuery

@@ -16,7 +16,7 @@ use app\models\Project;
     <?php Pjax::begin(['id'=>'pajx-form-0']); ?>
     <?php $form = ActiveForm::begin(['options' => [ 'data-pjax'=> true ]]); ?>
     
-    <table class="form-table" style="margin-top: 20px; table-layout:fixed; width: 600px">
+    <table class="form-table" style="width: 600px">
         <tr>
             <td width="33%"><?= $form->field($model, 'project_id')->dropDownList(Project::getIdNameMap())->label(Yii::t('app', 'Working project')) ?></td>
             <td width="33%"><?= $form->field($model, 'start_date')->widget('app\widgets\DateTimePicker', ['type' => DateTimePicker::TYPE_DATE,'format' => 'yyyy-MM-dd']) ?></td>
@@ -54,7 +54,7 @@ use app\models\Project;
 */?>
 
     <div class="form-group" style="text-align: center">
-        <?= Html::submitButton(Yii::t('app', 'Save') , ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Save') , ['class' => 'form-end btn ' . ($model->isNewRecord ? 'btn-success' : 'btn-primary')]) ?>
     </div>
 
    

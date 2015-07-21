@@ -20,11 +20,11 @@ define ('BATIK_PATH', 'batik-rasterizer.jar');
 ini_set('magic_quotes_gpc', 'off');
 
 $type = $_POST['type'];
-$svg = (string) $_POST['svg'];
-$filename = (string) $_POST['filename'];
+if (isset($_POST['svg']))$svg = (string) $_POST['svg'];
+if (isset($_POST['filename'])) $filename = (string) $_POST['filename'];
 
 // prepare variables
-if (!$filename){// or !preg_match('/^[A-Za-z0-9\-_ ]+$/', $filename)) {
+if (!isset($filename)){// or !preg_match('/^[A-Za-z0-9\-_ ]+$/', $filename)) {
 	$filename = 'chart';
 }
 
@@ -37,8 +37,8 @@ if ($type == 'text/csv' || $type == 'application/vnd.ms-excel'){
     }
     if ($data){
         header("Content-Disposition: attachment; filename=\"$filename.$ext\"");
-        header("Content-Type: $type");
-        
+        header("Content-Type: $type;charset=utf-8");
+        printf("%c%c%c", 0xEF, 0xBB, 0xBF); //UTF-8 BOM
         echo $data;
     }
     exit(0);
@@ -135,6 +135,7 @@ if (isset($typeString)) {
 
 // SVG can be streamed directly back
 } else if ($ext == 'svg') {
+    header("content-type:text/html; charset=utf-8");
 	header("Content-Disposition: attachment; filename=\"$filename.$ext\"");
 	header("Content-Type: $type");
 	echo $svg;

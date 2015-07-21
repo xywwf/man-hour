@@ -187,6 +187,7 @@
             url = options.url || '/highcharts/export/download.php';
 
         // Download attribute supported
+/*            
         if (downloadAttrSupported) {
             a = document.createElement('a');
             a.href = href;
@@ -201,7 +202,9 @@
             blobObject = new Blob([content]);
             window.navigator.msSaveOrOpenBlob(blobObject, name + '.' + extention);
 
-        } else {
+        } else 
+*/        
+        {
             // Fall back to server side handling
             Highcharts.post(url, {
                 data: content,

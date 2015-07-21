@@ -10,6 +10,10 @@ class G
         $value = Yii::t('app', $value);
     }
 
+    public static function t($msg, $category='app'){
+        return Yii::t($category, $msg);
+    }
+    
     public static function flash($key, $value = true, $removeAfterAccess = true)
     {
         Yii::$app->getSession()->setFlash($key, Yii::t('app',$value), $removeAfterAccess);

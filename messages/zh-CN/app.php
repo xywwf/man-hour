@@ -17,28 +17,44 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    //Login page
+    //Main page
     'Welcome to ' => '欢迎使用',
     'Geely Auto (Shanghai) manhour system' => '吉利汽车（上海）工时管理系统',
     'Geely Auto (Shanghai) ' => '吉利汽车（上海）',
     'Home' => '首页',
-    'Manhour logs' => '工时记录',
-    'User management' => '用户管理',
+    'Manhour' => '工时记录',
+    'User' => '用户管理',
+    'Project' =>'项目管理',
+    'Export' =>'工时导出',
+       
+    //Login page
     'Login' => '登录',
     'Logout' => '登出',
     'Remember me' => '记住我',
     'Incorrect username or password!' => '用户名或密码不正确！',
     
-    //index page
+    //User index page
     'Working hour statistics in one week' => '一周工时统计图表',
     'Working project number' => '当天工作的项目总数',
     'Working time(Hour)' => '工作时间(小时)',
+    
+    //Entry export
+    'Project time cost statistics' => '项目时间花费统计',
+    'Time cost(Hour)' => '时间消耗（小时）',
+    'Number of days/users' => '天数/人员数',
+    'Time cost' => '总时间消耗',
+    'User number working in this project' => '项目中工作人员数',
+    'Project lasting days' => '项目持续天数',
+    'Start date' => '起始日期',
+    'End date' => '截止日期',
+    'Generate report' => '生成报表',
+    'Reset' => '重置',
     
     //User table
     'User ID' => '用户ID',
     'User type' => '用户类型',
     'Username' => '用户名',
-    'Personal name' => '姓名',
+    'Personal name' => '员工姓名',
     'Identity card' => '身份证',
     'Employe ID' => '员工号',
     'Department ID' => '部门号',
@@ -57,6 +73,8 @@ return [
     'Save' => '保存',
     'Modify user information' =>'修改用户信息',
     'Reset password' => '重置密码',
+    'Batch delete users' => '批量删除用户',
+    'Synchronize user list' => '同步用户列表',
     
     'Uninitialized'   => '未启用用户',
     'Super admin'     => '超级管理员',
@@ -75,14 +93,15 @@ return [
     'Normal' => '正常',
     'Finished' => '已完成',
     'Closed' => '关闭',
-    'Project management' =>'项目管理',
     '+Add new project' => '+添加新项目',
+    'Batch delete projects' => '批量删除项目',    
     'Modify project information' =>'修改项目内容',
     'Project list' => '项目列表',
     'Working project' => '任务所属项目',
 
     //Entry table
     'Manhour log ID' => '工时记录ID',
+    'Manhour logs' => '工时记录列表',    
     'Date' => '日期',
     'Start' => '开始',
     'Duration' => '时长',
@@ -92,11 +111,10 @@ return [
     'Modify manhour log' =>'修改工时记录',
         
     '+Add a manhour log'   => '+登记新工时',
-    'Delete selected logs' => '删除所选记录',    
+    'Batch delete logs' => '批量删除记录',    
     
     //Other
     'Please choose...' => '请选择...',
-    'Delete selected projects' => '删除所选项目',
     'Please select at least one row to delete!' => '您还没有选择要删除的行！',
     'Please confirm to delete the selected rows?' => '请确认您要删除这些行数据？',
     'Save successfully!' => '保存成功！',

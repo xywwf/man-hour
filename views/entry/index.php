@@ -14,10 +14,10 @@ $page = Yii::$app->getRequest()->get('page');
 <div class="entry-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p style="text-align: right">
-        <?= Html::a(Yii::t('app', 'Delete selected logs'), ['deletes', 'page' => $page ], [
+        <?= Html::a(Yii::t('app', 'Batch delete logs'), ['deletes', 'page' => $page ], [
             'class' => 'btn btn-success', 
             'onclick' => 'return deleteSelected(this);',
             'data-pjax' => '0',
@@ -39,10 +39,9 @@ $page = Yii::$app->getRequest()->get('page');
         'columns' => [
             ['class' => 'yii\grid\CheckboxColumn', 'headerOptions' => ['width' => '30' ]],
             ['class' => 'yii\grid\SerialColumn', 'headerOptions' => ['width' => '30' ]],
-
             //'id',
             //'user_id',
-            //'personal_name',
+            [ 'attribute' => 'personal_name', 'headerOptions' => ['width' => '120'], 'visible' => $user->isAdmin() ],
             [ 'attribute' => 'project_name', 'headerOptions' => ['width' => '150' ]],
             [ 'attribute' => 'start_date', 'headerOptions' => ['width' => '100' ]],
             [ 'attribute' => 'start_time', 'headerOptions' => ['width' => '60' ], 'format' => ['time', 'HH:mm'], 'filter' => false ],

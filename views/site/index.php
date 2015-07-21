@@ -10,84 +10,67 @@ $user = Yii::$app->user->identity;
 <div class="site-index">
 
 <?php if (\app\G::isEn()): ?>
-
     <div class="jumbotron">
-        <h1><?= Yii::t('app', 'Geely Auto (Shanghai) manhour system') ?></h1>
-        <h2> <span><?= Yii::t('app', 'Dear user ') ?></span>
-             <a herf="#"><?= $user->personal_name?></a>
-             <span><?=Yii::t('app', 'Welcome! Today is:') . date('Y-m-d') ?>
-        </h2>
-        
+        <h1 style="font-size: 40px;">Geely Auto (Shanghai) manhour system</h1>
+        <p style="text-align: left; padding-top: 20px;">Now is <?= \app\G::showDateFull(time()) ?> , Welcome [<a herf="#"><?= $user->personal_name?></a>]</p>
         <div id="index-chart" style="width: 100%; height: 450px; padding-top: 5px;"></div>
-    </div>
-
-    <div class="body-content" style="text-align: center;">
-
-        <div class="row">
-            <div class="col-lg-4">
-
-<!--     
-                <h2><?= Yii::t('app', 'Manhour logs') ?></h2>
-                <h4><?= Yii::t('app', 'You have totally entered {numtotal} records.<br>Today is {date}, you entered {numtoday} records today.', 
-                    ['numtotal' => 10, 'date' => date('Y-m-d'), 'numtoday' => 3] ) ?></h4>
---> 
-
-                <p>
-                    <?= Html::a('管理工时记录&raquo;', ['entry/index' ], [
-                        'class' => 'btn btn-lg btn-success', 
+        
+        <div style="padding-top: 30px; text-align: left;">
+                
+            <div class="panel panel-info">
+                <div class="panel-heading"><span class="glyphicon glyphicon-time"></span>Manhour logs management</div>
+                <div class="panel-body">
+                    <?= Html::a('Click to manage your manhour logs<span class="badge">'.$user->getEntriesCount().'</span>', ['entry/index' ], [
+                        'class' => 'btn btn-success', 
                     ]) ?>
-                </p>
-                <p>您总共登记了<a herf="#">10</a>条工时记录.</p>
-                <p>现在是<?= date('Y-m-d') ?>. 您今天共有<a herf="#">2</a>条工时记</p>
-
-
-
+                </div>
             </div>
-            <div class="col-lg-4">
-                <h2><?= Yii::t('app', 'Modify user information') ?></h2>
-
-                <p>点击这里编辑您的用户信息</p>
-
-                <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-    </div>
+            <div class="panel panel-info">
+                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span>User information</div>
+                <div class="panel-body">
+                    <p><?= Html::a('Update your profile&raquo;', ['user/update', 'id' => $user->uid], [
+                            'class' => 'btn btn-success', 
+                        ]) ?>
+                        <?= Html::a('Change your password&raquo;', ['user/update', 'id' => $user->uid], [
+                            'class' => 'btn btn-success', 
+                        ]) ?>
+                    </p>                    
+                </div>
+            </div> 
+        </div>
+    </div> 
+    
 <?php else : ?>    
     <div class="jumbotron">
         <h1>吉利汽车（上海）工时管理系统</h1>
         <p style="text-align: left; padding-top: 20px;">现在是<?= \app\G::showDateFull(time()) ?> ,欢迎[<a herf="#"><?= $user->personal_name?></a>]</p>
         <div id="index-chart" style="width: 100%; height: 450px; padding-top: 5px;"></div>
-    </div>
-
-    <div class="body-content" style="text-align: center;">
-
-        <div class="row">
-            <div class="col-lg-4">
-
-<!--     
-                <h2><?= Yii::t('app', 'Manhour logs') ?></h2>
-                <h4><?= Yii::t('app', 'You have totally entered {numtotal} records.<br>Today is {date}, you entered {numtoday} records today.', 
-                    ['numtotal' => 10, 'date' => date('Y-m-d'), 'numtoday' => 3] ) ?></h4>
---> 
-
-                <p>
-                    <?= Html::a('管理工时记录&raquo;', ['entry/index' ], [
-                        'class' => 'btn btn-lg btn-success', 
+        
+        <div style="padding-top: 30px; text-align: left;">
+                
+            <div class="panel panel-info">
+                <div class="panel-heading"><span class="glyphicon glyphicon-time"></span>管理工时记录</div>
+                <div class="panel-body">
+                    <?= Html::a('点击查看您的工时记录 <span class="badge">'.$user->getEntriesCount().'</span>', ['entry/index' ], [
+                        'class' => 'btn btn-success', 
                     ]) ?>
-                </p>
-                <p>您总共登记了<a herf="#">10</a>条工时记录.</p>
-                <p>今天是<?= date('Y-m-d') ?>. 您今天共有<a herf="#">2</a>条工时记</p>
-
-
-
+                </div>
             </div>
-            <div class="col-lg-4">
-                <h2><?= Yii::t('app', 'Modify user information') ?></h2>
+            <div class="panel panel-info">
+                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span>修改用户信息</div>
+                <div class="panel-body">
+                    <p><?= Html::a('更新个人信息&raquo;', ['user/update', 'id' => $user->uid], [
+                            'class' => 'btn btn-success', 
+                        ]) ?>
+                        <?= Html::a('修改密码&raquo;', ['user/update', 'id' => $user->uid], [
+                            'class' => 'btn btn-success', 
+                        ]) ?>
+                    </p>                    
+                </div>
+            </div> 
+        </div>
+    </div>  
 
-                <p>点击这里编辑您的用户信息</p>
-
-                <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-    </div>
 <?php endif ?> 
 </div>
 

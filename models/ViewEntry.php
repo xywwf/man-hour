@@ -69,6 +69,7 @@ class ViewEntry extends \yii\db\ActiveRecord
             'project_name' => Yii::t('app', 'Project name'),
             'start_date' => Yii::t('app', 'Date'),
             'start_time' => Yii::t('app', 'Start'),
+            'end_date' => Yii::t('app', 'End Date'),
             'end_time' => Yii::t('app', 'End'),
             'duration' => Yii::t('app', 'Duration'),
             'description' => Yii::t('app', 'Working description'),

@@ -7,12 +7,8 @@ use app\G;
 use app\models\Entry;
 use app\models\ViewEntry;
 use app\models\ViewEntrySearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\Project;
-use yii\helpers\Html;
-use yii\helpers\Json;
 
 /**
  * EntryController implements the CRUD actions for Entry model.
@@ -40,6 +36,11 @@ class EntryController extends \app\MyController
         $searchModel = new ViewEntrySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         
+        $id = Yii::$app->user->identity;
+        if (!$id->isAdmin()){
+            $dataProvider->query->andWhere(['user_id' => $id->uid]);
+        }
+        
         if( $this->req('page') === 'last' )
         {
             $pagination = $dataProvider->getPagination();
@@ -50,9 +51,31 @@ class EntryController extends \app\MyController
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'user' => $id,
         ]);
     }
 
+    
+    /**
+     * Export the selected models.
+     * @return mixed
+     */
+    public function actionExport()
+    {
+        $searchModel = new ViewEntrySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    
+        $id = Yii::$app->user->identity;
+        if (!$id->isAdmin()){
+            $dataProvider->query->andWhere(['user_id' => $id->uid]);
+        }
+    
+        return $this->render('export', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
     /**
      * Return the statistics of manhour enties in json format for a given one week date.
      * This should be a ajax request.
@@ -88,6 +111,43 @@ class EntryController extends \app\MyController
 
         echo json_encode(array_merge($series));
     }    
+
+    /**
+     * Return the statistics of manhour enties in json format for some given parameters.
+     *      "select count(distinct user_id) as user_count, DATEDIFF(max(start_date), min(start_date)) as days, 
+     *      sum(duration)/3600 as time from mh_vw_entry group by project_id;"
+     * This should be a ajax request.
+     * @return mixed
+     */
+    public function actionStatisticsByProject()
+    {    
+        //reuse the id as the day index starting from 'first_day'
+        $models = ViewEntry::find()->select(['project_id', 'project_name',
+            'count(distinct user_id) as user_count', 
+            'DATEDIFF(max(start_date), min(start_date)) as days', 
+            'sum(duration) as time'])
+        //->where(['user_id'=>$uid])->andWhere(['between', 'start_date', $first_date, $last_date ])
+        ->groupBy(['project_id'])
+        ->asArray()->all();
+    
+
+        $categories = [];
+        $series = [ 
+            ['data' => [], 'name' => G::t('Time cost'), 'type' => 'column'],
+            ['data' => [], 'name' => G::t('User number working in this project'), 'type' => 'line', 'yAxis' => 1 ],            
+            ['data' => [], 'name' => G::t('Project lasting days'), 'type' => 'line', 'yAxis' => 1],
+         ];
+        foreach( $models as $model )
+        {
+            //$project_id = $model['project_id'];
+            $categories[] = $model['project_name'];
+            $series[1]['data'][] = intval($model['user_count']);
+            $series[2]['data'][] = intval($model['days']);
+            $series[0]['data'][] = round($model['time'] / 36 ) / 100; //保留两位小数
+        }
+    
+        echo json_encode(['categories' => $categories, 'series' => $series]);
+    }
     
     
     /**

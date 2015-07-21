@@ -108,6 +108,7 @@ a.desc:after {
 .form-table {
 	width: 100%;
 	margin-top: 20px;
+	table-layout: fixed;
 }
 
 .form-table td {
@@ -129,7 +130,7 @@ a.desc:after {
     margin: 0 0 15px 0;
 }
 
-.btn {
+.btn .form-end {
 	margin: 10px;
 }
 
@@ -163,6 +164,19 @@ h1 {
 	padding: 5px 15px 5px 15px;
 	margin: 0 0 20px 0;
 	overflow: auto;
+}
+
+.ms2side__div {
+	clear: left;
+	width: 100%;
+	padding: 1px;
+	float: left;
+	margin: 20px;
+	background : url('') repeat-x; /* HACK FOR CHROME*/
+}
+
+.ms2side__options {
+	margin-top: 25px;
 }
 
 }

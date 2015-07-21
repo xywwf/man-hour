@@ -31,8 +31,8 @@ use app\models\Project;
     </table>
 
     <div class="form-group" style="text-align: center">
-        <?= Html::submitButton(Yii::t('app','Save'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        <?php /*= Html::resetButton('取消', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) */?>  
+        <?= Html::submitButton(Yii::t('app','Save'), ['class' => 'form-end btn ' . ($model->isNewRecord ? 'btn-success' : 'btn-primary')]) ?>
+        <?php /*= Html::resetButton('取消', ['class' => 'form-end btn ' . ($model->isNewRecord ? 'btn-success' : 'btn-primary')]) */?>  
     </div>
 
     <?php ActiveForm::end(); ?>

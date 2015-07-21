@@ -61,11 +61,11 @@ use app\models\User;
     <div class="form-group" style="text-align: center">
         <?php 
             if ($model->isNewRecord){
-                echo Html::submitButton( Yii::t('app', 'Save'), ['class' => 'btn btn-success']);
+                echo Html::submitButton( Yii::t('app', 'Save'), ['class' => 'form-end btn btn-success']);
             } else {
-                echo Html::submitButton( Yii::t('app', 'Save'), ['class' => 'btn btn-primary']);
+                echo Html::submitButton( Yii::t('app', 'Save'), ['class' => 'form-end btn btn-primary']);
                 echo Html::a(Yii::t('app','Reset password'), ['user/reset-password', 'id'=>$model->uid], [
-                        'class' => 'btn btn-primary'
+                        'class' => 'form-end btn btn-primary'
                     ]); 
             }
          ?>
