@@ -18,8 +18,8 @@ class ProjectSearch extends Project
     public function rules()
     {
         return [
-            [['id', 'state'], 'integer'],
-            [['name', 'start_time', 'target_time', 'end_time', 'description'], 'safe'],
+            [['id', 'parent_id', 'state'], 'integer'],
+            [['name', 'start_date', 'target_date', 'end_date', 'description'], 'safe'],
         ];
     }
 
@@ -57,10 +57,11 @@ class ProjectSearch extends Project
 
         $query->andFilterWhere([
             'id' => $this->id,
+            'parent_id' => $this->parent_id,
             'state' => $this->state,
-            'start_time' => $this->start_time,
-            'target_time' => $this->target_time,
-            'end_time' => $this->end_time,
+            'start_date' => $this->start_date,
+            'target_date' => $this->target_date,
+            'end_date' => $this->end_date,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

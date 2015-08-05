@@ -1,9 +1,12 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
 use yii\widgets\Pjax;
 use app\models\User;
+use app\models\Department;
+use kartik\grid\GridView;
+use kartik\editable\Editable;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\MhUserSearch */
@@ -41,11 +44,11 @@ $page = Yii::$app->getRequest()->get('page');
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'tableOptions' => [ 'class' => 'table table-striped table-bordered',
-                            'style' => 'table-layout:fixed'],
+        'tableOptions' => [ 'class' => 'table table-striped table-bordered'],
         'columns' => [
             [ 'class' => 'yii\grid\CheckboxColumn', 'headerOptions' => ['width' => '30' ]],
-            [ 'attribute' => 'uid', 'headerOptions' => ['width' => '80' ]],
+            //[ 'attribute' => 'uid', 'headerOptions' => ['width' => '80' ]],
+            ['class' => 'yii\grid\SerialColumn', 'headerOptions' => ['width' => '30' ]],
             [ 'attribute' => 'username', 'headerOptions' => ['width' => '120' ]],
             [ 'attribute' => 'personal_name', 'headerOptions' => ['width' => '120' ]],            
             [
@@ -57,15 +60,39 @@ $page = Yii::$app->getRequest()->get('page');
                 },
                 'headerOptions' => ['width' => '100' ]
             ],
-            [ 'attribute' => 'employe_id', 'headerOptions' => ['width' => '100' ]],            
-            [ 'attribute' => 'department_name', 'headerOptions' => ['width' => '120' ]],       
+            //[ 'attribute' => 'employe_id', 'headerOptions' => ['width' => '100' ]],
+            [
+                'class'=>'kartik\grid\EditableColumn',
+                'attribute' => 'department_id',
+                'vAlign'=>'middle',
+                'width' => '80px',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => Department::getIdNameMap(),
+                'filterWidgetOptions'=>['pluginOptions'=>['allowClear'=>true],],
+                'filterInputOptions'=>['placeholder'=>'Any status', 'multiple'=>true],
+                'value' => function($model)
+                    {
+                        return ArrayHelper::getValue(Department::getIdNameMap(), $model->department_id);
+                    },
+                'editableOptions' => [ 'asPopover' => true,
+                    'inputType' => Editable::INPUT_DROPDOWN_LIST,
+                    'submitOnEnter' => false,
+                    'showButtonLabels' => true,
+                    'data' => Department::getIdNameMap(),
+                ],
+            ],
+            [
+            'class'=>'kartik\grid\EditableColumn',
+            'attribute' => 'price',
+            'vAlign'=>'middle',
+            'width' => '60px',
+            'editableOptions' => [ 'asPopover' => true,
+                'submitOnEnter' => false,
+                'showButtonLabels' => true,
+            ],
+            ],
             [ 'attribute' => 'mobile', 'headerOptions' => ['width' => '100' ]],
             [ 'attribute' => 'email', 'format' => 'email', 'headerOptions' => ['width' => '150' ]],                             
-            // 'password',
-            // 'create_time',
-            // 'ext',
-            // 'ext2',
-
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => Yii::t('app','Action'),
@@ -89,5 +116,5 @@ $page = Yii::$app->getRequest()->get('page');
     <?php Pjax::end(); ?>
 </div>
 
-<?php \app\G::registerViewJs($this); ?>
-
+<?php \app\G::registerJsDeleteSelected($this); ?>
+<?php \app\G::registerJsFancyBox($this); ?>

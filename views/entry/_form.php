@@ -1,9 +1,7 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
-use app\widgets\DateTimePicker;
 use app\models\Project;
 
 /* @var $this yii\web\View */
@@ -17,48 +15,55 @@ use app\models\Project;
     <?php $form = ActiveForm::begin(['options' => [ 'data-pjax'=> true ]]); ?>
     
     <table class="form-table" style="width: 600px">
-        <tr>
-            <td width="33%"><?= $form->field($model, 'project_id')->dropDownList(Project::getIdNameMap())->label(Yii::t('app', 'Working project')) ?></td>
-            <td width="33%"><?= $form->field($model, 'start_date')->widget('app\widgets\DateTimePicker', ['type' => DateTimePicker::TYPE_DATE,'format' => 'yyyy-MM-dd']) ?></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><?= $form->field($model, 'start_time')->widget('app\widgets\DateTimePicker', ['type' => DateTimePicker::TYPE_TIME,'format' => 'HH:mm']) ?></td>
-            <td><?= $form->field($model, 'end_time')->widget('app\widgets\DateTimePicker', ['type' => DateTimePicker::TYPE_TIME,'format' => 'HH:mm' ]) ?></td>
-            <td><?php echo $form->field($model, 'duration')->textInput(['id' => 'duration_timespinner', 'name' => 'duration_timespinner' ]);
-                 echo Html::activeHiddenInput($model, 'duration');
-                //$form->field($model, 'duration')->widget('yii\jui\Spinner', ['options' => ['class' => 'form-control']]) ?></td>
-        </tr>        
-        <tr>
-            <td colspan="3"><?= $form->field($model, 'description')->textarea(['rows' => "7", 'cols' => '50']) ?></td>
-        </tr>   
-    </table>    
+		<tr>
+			<td width="33%"><?= $form->field($model, 'project_id')->dropDownList(Project::getIdNameMap(['state' => Project::STATE_NORMAL]))->label(Yii::t('app', 'Working project')) ?></td>
+			<td width="33%"><?= $form->field($model, 'start_date')->widget('kartik\widgets\DatePicker', 
+			    ['convertFormat' => true, 'removeButton' => false, 'pluginOptions' => ['todayBtn' => 'linked', 'todayHighlight' => true ]]) ?></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td><?=$form->field($model, 'start_time')->widget('kartik\widgets\TimePicker', ['pluginOptions' => ['minuteStep' => 30,'showMeridian' => false]])?></td>
+			<td><?= $form->field($model, 'end_time')->widget('kartik\widgets\TimePicker', ['pluginOptions' => [ 'minuteStep' => 30,'showMeridian' => false]]) ?></td>
+			<td><?php echo $form->field($model, 'duration')->textInput([
+                    'id' => 'duration_timespinner',
+                    'name' => 'duration_timespinner'
+                ]);
+                echo Html::activeHiddenInput($model, 'duration');
+                // $form->field($model, 'duration')->widget('yii\jui\Spinner', ['options' => ['class' => 'form-control']])
+            ?></td>
+		</tr>
+		<tr>
+			<td colspan="3"><?= $form->field($model, 'description')->textarea(['rows' => "7", 'cols' => '50']) ?></td>
+		</tr>
+	</table>    
 
     
-<?php /*
-    <?= $form->field($model, 'user_id')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'end_date')->textInput() ?>
-
-    <?= $form->field($model, 'update_time')->textInput() ?>
-
-    <?= $form->field($model, 'update_user_id')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'type')->textInput() ?>
-
-    <?= $form->field($model, 'state')->textInput() ?>
-
-    <?= $form->field($model, 'ext')->textInput() ?>
-
-    <?= $form->field($model, 'ext2')->textInput(['maxlength' => true]) ?>
-*/?>
+<?php 
+/*
+       * <?= $form->field($model, 'user_id')->textInput(['maxlength' => true]) ?>
+       *
+       * <?= $form->field($model, 'end_date')->textInput() ?>
+       *
+       * <?= $form->field($model, 'update_time')->textInput() ?>
+       *
+       * <?= $form->field($model, 'update_user_id')->textInput(['maxlength' => true]) ?>
+       *
+       * <?= $form->field($model, 'type')->textInput() ?>
+       *
+       * <?= $form->field($model, 'state')->textInput() ?>
+       *
+       * <?= $form->field($model, 'ext')->textInput() ?>
+       *
+       * <?= $form->field($model, 'ext2')->textInput(['maxlength' => true]) ?>
+       */
+?>
 
     <div class="form-group" style="text-align: center">
-        <?= Html::submitButton(Yii::t('app', 'Save') , ['class' => 'form-end btn ' . ($model->isNewRecord ? 'btn-success' : 'btn-primary')]) ?>
+        <?= Html::submitButton(Yii::t('app', 'Save') , ['class' => 'form-end btn ' . ($model->isNewRecord ? 'btn-success' : 'btn-primary')])?>
     </div>
 
    
-<?php $this->beginBlock('jsInView') ?>
+<?php $this->beginBlock('jsInView')?>
 
     function timeToMinute(time)
     {
@@ -147,11 +152,12 @@ $.widget( "ui.timespinner", $.ui.spinner, {
     });
     
   });
-<?php $this->endBlock() ?>
-<?php 
-    \app\assets\JuiMouseWheelAsset::register($this);
-    \yii\jui\JuiAsset::register($this);
-    $this->registerJs($this->blocks['jsInView'], \Yii\web\View::POS_END); 
+<?php $this->endBlock()?>
+<?php
+
+\app\assets\JuiMouseWheelAsset::register($this);
+\yii\jui\JuiAsset::register($this);
+$this->registerJs($this->blocks['jsInView'], \Yii\web\View::POS_END);
 ?>    
  
     <?php ActiveForm::end(); ?>   

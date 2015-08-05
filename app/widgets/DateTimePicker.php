@@ -111,7 +111,7 @@ class DateTimePicker extends \yii\jui\InputWidget
     {
         $this->registerFormat();
         
-        Html::addCssStyle($this->options, ['z-index' => 9000,], false);
+        Html::addCssStyle($this->options, ['z-index' => 100,], false);
         Html::addCssClass($this->options, 'form-control');
 
         if( !isset($this->value) )

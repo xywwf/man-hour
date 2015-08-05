@@ -96,13 +96,17 @@ a.desc:after {
     content: "\e156";
 }
 
-.grid-view th {
-    white-space: nowrap;
-}
+#.grid-view th {
+#    white-space: nowrap;
+#}
 
 .grid-view td {
 	word-break:break-all;
 	word-wrap:break-word;
+}
+
+.text-force-warp {
+	white-space: normal !important;
 }
 
 .form-table {
@@ -177,6 +181,10 @@ h1 {
 
 .ms2side__options {
 	margin-top: 25px;
+}
+
+.kv-align-left button {
+	text-align: left;
 }
 
 }

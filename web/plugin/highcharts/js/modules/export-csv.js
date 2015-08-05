@@ -184,7 +184,7 @@
             blobObject,
             name = (chart.title ? chart.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart'),
             options = (chart.options.exporting || {}).csv || {},
-            url = options.url || '/highcharts/export/download.php';
+            url = options.url || '/plugin/highcharts/export/download.php';
 
         // Download attribute supported
 /*            

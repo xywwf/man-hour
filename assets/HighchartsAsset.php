@@ -14,8 +14,8 @@ class HighchartsAsset extends AssetBundle
 {
     //public $sourcePath = '@bower/highcharts/js';    
     
-    public $basePath = '@webroot/highcharts/js';
-    public $baseUrl = '@web/highcharts/js';
+    public $basePath = '@webroot/plugin/highcharts/js';
+    public $baseUrl = '@web/plugin/highcharts/js';
     
     public $js = [
         'highcharts.src.js',
@@ -37,6 +37,8 @@ class HighchartsAsset extends AssetBundle
     {
         if ( \Yii::$app->language === "zh-CN" ) {
             $this->js[] = "lang/highcharts-zh_CN.js";
+        }else{
+            $this->js[] = "lang/highcharts-en.js";
         }
         
         if( !YII_ENV_DEV ){

@@ -22,8 +22,16 @@
         "newerton/yii2-fancybox": "dev-master",
         "yiisoft/yii2-jui": "2.0.4",
         "bower-asset/jquery-form": "3.51",
-        "bower-asset/echarts": "*",
-        "bower-asset/zrender": "~2.1.1"
+        "kartik-v/yii2-grid": "*",
+        "kartik-v/yii2-dynagrid": "*",
+        "kartik-v/yii2-datecontrol": "*",
+        "kartik-v/yii2-widgets": "*",
+        "kartik-v/yii2-editable": "*",
+        "kartik-v/yii2-mpdf": "*",
+        "kartik-v/yii2-widget-rangeinput": "*",
+        "kartik-v/yii2-builder": "*",
+        "kartik-v/yii2-nav-x": "*",
+        "kartik-v/yii2-export": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

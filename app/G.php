@@ -10,8 +10,8 @@ class G
         $value = Yii::t('app', $value);
     }
 
-    public static function t($msg, $category='app'){
-        return Yii::t($category, $msg);
+    public static function t($msg, $params = [], $category='app'){
+        return Yii::t($category, $msg, $params);
     }
     
     public static function flash($key, $value = true, $removeAfterAccess = true)
@@ -37,23 +37,9 @@ class G
         return \Yii::$app->formatter->asDate( $date, 'yyyy-MM-dd HH:mm:ss z ') . $week;
     }
     
-    public static function registerViewJs($view, $options = [])
-    {
-        $width  = isset($options['width'])  ? $options['width'] : '600';
-        $height = isset($options['height']) ? $options['height'] : '500';
-    
-$js = "
-    function fancybox(item){
-        $.fancybox({
-            'autoSize' : false,
-    		'width'	   : ".$width.",
-            'height'   : ".$height.",
-            'padding'  : 40,
-            'href'     : $(item).attr('href'),
-    		'type'     :'ajax',
-    	});
-    }
-    
+    public static function registerJsDeleteSelected($view, $options = [])
+    {    
+        $js = "
     function deleteSelected(item){
         var ids = $('.grid-view').yiiGridView('getSelectedRows');
         //alert('IDS:' + ids);
@@ -71,6 +57,26 @@ $js = "
             $(item).attr('href', url + (url.indexOf('?') >= 0 ? '&' : '?') + 'ids=' + ids);
         }
         return r;
+    }
+";
+        $view->registerJs($js, yii\web\View::POS_END);
+    }
+    
+    public static function registerJsFancyBox($view, $options = [])
+    {
+        $width  = isset($options['width'])  ? $options['width'] : '600';
+        $height = isset($options['height']) ? $options['height'] : '500';
+    
+$js = "
+    function fancybox(item){
+        $.fancybox({
+            'autoSize' : false,
+    		'width'	   : ".$width.",
+            'height'   : ".$height.",
+            'padding'  : 40,
+            'href'     : $(item).attr('href'),
+    		'type'     :'ajax',
+    	});
     }
 ";
         \newerton\fancybox\FancyBoxAsset::register($view);

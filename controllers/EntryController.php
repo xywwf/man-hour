@@ -9,6 +9,8 @@ use app\models\ViewEntry;
 use app\models\ViewEntrySearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ArrayDataProvider;
+use yii\helpers\ArrayHelper;
 
 /**
  * EntryController implements the CRUD actions for Entry model.
@@ -149,6 +151,116 @@ class EntryController extends \app\MyController
         echo json_encode(['categories' => $categories, 'series' => $series]);
     }
     
+    /**
+     * Return the statistics of manhour enties in json format for some given parameters.
+     *      "select count(distinct user_id) as user_count, DATEDIFF(max(start_date), min(start_date)) as days,
+     *      sum(duration)/3600 as time from mh_vw_entry group by project_id;"
+     * This should be a ajax request.
+     * @return mixed
+     */
+    public function actionExportMhByMonth()
+    {
+        //reuse the id as the day index starting from 'first_day'
+        $results = 
+            ViewEntry::find()->select([
+                'year(start_date) as year','user_id','personal_name', 'experience', 'price', 'month(start_date) as month', 
+                "date_format(start_date, '%Y%c')",  'sum(duration) as duration'
+            ])
+            ->groupBy(['user_id', "date_format(start_date, '%Y%c')"])
+            ->asArray()->all();
+        
+        $months = [];
+        $tmps = [];
+        foreach ($results as $row){
+            $ref = &$tmps[$row['year']][$row['user_id']];       
+            if (!isset($ref)) {
+                foreach ($row as $name => $value) {
+                    $ref[$name] = $value;
+                }
+                $ref['duration'] = 0;
+            }
+            $duration = floatval(intval($row['duration'] / 1800)) / 2;
+            $ref['m'.$row['month']] = $duration;
+            $ref['duration'] += $duration;
+            $months[intval($row['month'])] = true;
+        }
+        
+        $totalCost = 0;
+        $models = [];
+        foreach ($tmps as $tmp1){
+            foreach ($tmp1 as $tmp2) {
+                $tmp2['cost'] = $tmp2['duration'] * $tmp2['price'];
+                $totalCost += $tmp2['cost'];
+                $models[] = $tmp2;
+            }
+        }
+                
+        //print_r($models);
+        //Yii::$app->end();
+        
+        //$searchModel = new ViewEntrySearch();
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $models,
+            'pagination' => false,
+        ]);
+        
+        return $this->render('timecost', [
+            //'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'totalCost' => $totalCost,
+            'mVisible' => $months,
+        ]);
+    }
+    
+    /**
+     * Return the statistics of manhour enties in json format for some given parameters.
+     *      "select count(distinct user_id) as user_count, DATEDIFF(max(start_date), min(start_date)) as days,
+     *      sum(duration)/3600 as time from mh_vw_entry group by project_id;"
+     * This should be a ajax request.
+     * @return mixed
+     */
+    public function actionExportAttendance()
+    {
+        //reuse the id as the day index starting from 'first_day'
+        $results =
+            ViewEntry::find()->select([
+                'company','personal_name', 'day(start_date) as day', 'min(start_time) as start_time', 'max(end_time) as end_time', 'sum(duration) as duration'
+            ])
+            ->groupBy(['start_date'])->orderBy('day')
+            ->asArray()->all();
+            
+        $results = ArrayHelper::index($results, function($elem){ return intval($elem['day']);} );
+        
+        $total = 0;
+        $days = [];
+        for ($i=1; $i <= 31; $i++) {
+            if (array_key_exists($i, $results)) {
+                $duration = ArrayHelper::getValue($results[$i], 'duration', 0);
+                $duration = (int)($duration / 1800) / 2;
+                $days[$i] = $results[$i];
+                $days[$i]['duration'] = $duration;
+                $total += $duration;
+            } else {
+                $days[$i] = ['day' => $i ];
+            }
+        }
+        
+        //print_r($days);
+        //Yii::$app->end();
+    
+        //$searchModel = new ViewEntrySearch();
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $days,
+            'pagination' => false,
+        ]);
+    
+        return $this->render('attendance', [
+            //'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            //'mVisible' => $months,
+            'total' => $total,
+        ]);
+    }    
     
     /**
      * Displays a single Entry model.

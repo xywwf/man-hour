@@ -13,8 +13,9 @@ use Yii;
  * @property string $personal_name
  * @property string $personal_id
  * @property string $employe_id
- * @property string $department_id
- * @property string $department_name
+ * @property integer $department_id
+ * @property integer $company_id
+ * @property integer $price
  * @property string $mobile
  * @property string $email
  * @property string $password
@@ -86,10 +87,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['type', 'created_by', 'last_updated_by', 'ext'], 'integer'],
+            [['type', 'created_by', 'last_updated_by', 'ext', 'department_id', 'company_id'], 'integer'],
+            [['price'], 'number'],
             [['username', 'personal_name'], 'required'],
             [['created_time', 'last_updated_time', 'password'], 'safe'],
-            [['username', 'personal_name', 'personal_id', 'employe_id', 'department_id', 'department_name', 'mobile'], 'string', 'max' => 24],
+            [['username', 'personal_name', 'personal_id', 'employe_id', 'mobile'], 'string', 'max' => 24],
             [['email'], 'string', 'max' => 64],
             [['password'], 'string', 'max' => 160],
             [['ext2'], 'string', 'max' => 128],
@@ -109,8 +111,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'personal_name' => Yii::t('app', 'Personal name'),
             'personal_id' => Yii::t('app', 'Identity card'),
             'employe_id' => Yii::t('app', 'Employe ID'),
-            'department_id' => Yii::t('app', 'Department ID'),
-            'department_name' => Yii::t('app', 'Department name'),
+            'department_id' => Yii::t('app', 'Department name'),
+            'company_id' => Yii::t('app', 'Company name'),
+            'price' => Yii::t('app', 'Price/Hour'),
             'mobile' => Yii::t('app', 'Mobile'),
             'email' => Yii::t('app', 'Email'),
             'password' => Yii::t('app', 'Password'),
@@ -122,8 +125,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'ext2' => Yii::t('app', 'ext2'),
         ];
     }
-
-
+    
+    public function beforeValidate(){
+        if (isset($this->price)) {
+            $this->price = intval($this->price * 100) / 100;
+        }
+        return parent::beforeValidate();
+    }
+    
     /**
      * @return \yii\db\ActiveQuery
      */

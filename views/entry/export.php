@@ -27,12 +27,6 @@ function createCharts() {
         var title =  '<?= G::t('Project time cost statistics') ?>';
     
         var options = {
-        	colors: [   
-        	    '#2ec7c9','#b6a2de','#ffb980','#5ab1ef','#d87a80',
-                '#8d98b3','#e5cf0d','#97b552','#95706d','#dc69aa',
-                '#07a2a4','#9a7fd1','#588dd5','#f5994e','#c05050',
-                '#59678c','#c9ab00','#7eb00a','#6f5553','#c14089' 
-            ],
             chart: {
                 type: 'line'                         //指定图表的类型，默认是折线图（line）
             },
@@ -42,47 +36,9 @@ function createCharts() {
                 align: 'left',
                 x: 20            
             },
-    		credits: {
-    			enabled: false
-    		},
             exporting: {
                 filename: title, //use chart title
-                url: '/highcharts/export/download.php',
-                buttons: {
-                    contextButton: {
-             			menuItems: [{
-            				textKey: 'printChart',
-            				onclick: function () {this.print();}
-            			}, {
-            				separator: true
-            			}, {
-            				textKey: 'downloadJPEG',
-            				onclick: function () {this.exportChart({type: 'image/jpeg'});}
-            			}, {
-            				textKey: 'downloadPDF',
-            				onclick: function () {this.exportChart({type: 'application/pdf'});}
-            			}, {
-            				separator: true
-            			}, {
-                            textKey: 'downloadCSV',
-                            onclick: function () { this.downloadCSV(); }
-                        }, {
-                            textKey: 'downloadXLS',
-                            onclick: function () { this.downloadXLS(); }
-                        }]
-                    }
-                }
             },  		
-            legend: {
-                //backgroundColor: '#FFFFFF',
-                align: 'left',
-                verticalAlign: 'top',
-                maxHeight: 60,
-                floating: true,
-                //shadow: true,
-                x: 60,
-                y: 40
-            },
             xAxis: {
                 categories: json.categories,   //指定x轴分组
                 //type: 'datetime',
@@ -117,7 +73,6 @@ function createCharts() {
             plotOptions: {
                 column: {
                     stacking: 'normal',
-                    //pointWidth: 50,
                     borderRadius: 4,
                     borderWidth:  1,
                 },

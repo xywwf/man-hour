@@ -109,12 +109,6 @@ function createCharts( last_date, days ) {
         var title =  '<?= Yii::t('app', 'Working hour statistics in one week') ?>';
     
         var options = {
-        	colors: [   
-        	    '#2ec7c9','#b6a2de','#5ab1ef','#ffb980','#d87a80',
-                '#8d98b3','#e5cf0d','#97b552','#95706d','#dc69aa',
-                '#07a2a4','#9a7fd1','#588dd5','#f5994e','#c05050',
-                '#59678c','#c9ab00','#7eb00a','#6f5553','#c14089' 
-            ],
             chart: {
                 type: 'column'                         //指定图表的类型，默认是折线图（line）
             },
@@ -122,48 +116,10 @@ function createCharts( last_date, days ) {
                 text: title,      //指定图表标题
                 style: {"color": '#008acd'},
                 align: 'left',
-                x: 20            
+                x: 20
             },
-    		credits: {
-    			enabled: false
-    		},
             exporting: {
                 filename: title, //use chart title
-                url: '/highcharts/export/download.php',
-                buttons: {
-                    contextButton: {
-             			menuItems: [{
-            				textKey: 'printChart',
-            				onclick: function () {this.print();}
-            			}, {
-            				separator: true
-            			}, {
-            				textKey: 'downloadJPEG',
-            				onclick: function () {this.exportChart({type: 'image/jpeg'});}
-            			}, {
-            				textKey: 'downloadPDF',
-            				onclick: function () {this.exportChart({type: 'application/pdf'});}
-            			}, {
-            				separator: true
-            			}, {
-                            textKey: 'downloadCSV',
-                            onclick: function () { this.downloadCSV(); }
-                        }, {
-                            textKey: 'downloadXLS',
-                            onclick: function () { this.downloadXLS(); }
-                        }]
-                    }
-                }
-            },  		
-            legend: {
-                //backgroundColor: '#FFFFFF',
-                align: 'left',
-                verticalAlign: 'top',
-                maxHeight: 60,
-                floating: true,
-                //shadow: true,
-                x: 60,
-                y: 40
             },
             xAxis: {
                 categories: categories,   //指定x轴分组

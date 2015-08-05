@@ -83,4 +83,5 @@ $page = Yii::$app->getRequest()->get('page');
 
 </div>
 
-<?php \app\G::registerViewJs($this); ?>
+<?php \app\G::registerJsDeleteSelected($this); ?>
+<?php \app\G::registerJsFancyBox($this); ?>

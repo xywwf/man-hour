@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 use app\models\User;
+use app\models\Department;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\MhUser */
@@ -23,9 +24,9 @@ use app\models\User;
             <td><?= $form->field($model, 'personal_name')->textInput(['maxlength' => true]) ?></td>
         </tr>
         <tr>
-            <td><?= $form->field($model, 'employe_id')->textInput(['maxlength' => true]) ?></td>
+            <td><?= $form->field($model, 'department_id')->dropDownList(app\models\Department::getIdNameMap()) ?></td>
             <td></td>
-            <td><?= $form->field($model, 'department_name')->textInput(['readonly' => true]) ?></td>
+            <td><?= $form->field($model, 'price')->textInput() ?></td>
         </tr>
         <tr>
             <td><?= $form->field($model, 'mobile')->textInput(['maxlength' => true]) ?></td>
@@ -64,6 +65,7 @@ use app\models\User;
                 echo Html::submitButton( Yii::t('app', 'Save'), ['class' => 'form-end btn btn-success']);
             } else {
                 echo Html::submitButton( Yii::t('app', 'Save'), ['class' => 'form-end btn btn-primary']);
+                echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
                 echo Html::a(Yii::t('app','Reset password'), ['user/reset-password', 'id'=>$model->uid], [
                         'class' => 'form-end btn btn-primary'
                     ]); 
