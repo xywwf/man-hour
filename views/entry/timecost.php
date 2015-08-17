@@ -1,9 +1,14 @@
 <?php
 
+use app\G;
+use app\models\User;
+use app\models\ProjectInfo;
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use kartik\export\ExportMenu;
 use kartik\export\MyExportMenu;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\EntrySearch */
@@ -11,6 +16,8 @@ use kartik\export\MyExportMenu;
 
 $this->title = Yii::t('app', 'Manhour statistics by person & month');
 $this->params['breadcrumbs'][] = $this->title;
+$fileTitle = $fileTitle . $this->title;
+
 $mc = 1;
 
 $monthNames = [''];
@@ -26,7 +33,15 @@ $columns = [
     [ 'attribute' => 'year', 'label' => app\G::t('Year'), 'width' => '40px' ],
     [ 'attribute' => 'personal_name', 'label' => app\G::t('Personal name') , 'width' => '50px'],
     [ 'attribute' => 'experience', 'label' => app\G::t('Experience(Years)'), 'width' => '40px'],
-    [ 'attribute' => 'price', 'label' => app\G::t('Price/Hour'), 'width' => '40px'],
+    [ 'attribute' => 'price', 'label' => app\G::t('Price/Hour'), 'width' => '40px', 
+        'class'=>'kartik\grid\EditableColumn',
+        'editableOptions' => [ 'asPopover' => true,
+            'inputType' => kartik\editable\Editable::INPUT_TEXT,
+            'name' => 'price',
+            'size'=>'md',
+            'showButtonLabels' => true,
+            'placement' => kartik\popover\PopoverX::ALIGN_RIGHT,
+        ]],
     [ 'attribute' => 'm'.$mc, 'label' => $monthNames[$mc], 'visible' => isset($mVisible[$mc++]),'width' => '40px' ],//m1
     [ 'attribute' => 'm'.$mc, 'label' => $monthNames[$mc], 'visible' => isset($mVisible[$mc++]),'width' => '40px' ],//m2
     [ 'attribute' => 'm'.$mc, 'label' => $monthNames[$mc], 'visible' => isset($mVisible[$mc++]),'width' => '40px' ],
@@ -44,16 +59,17 @@ $columns = [
     [ 'content' => function() {return '';}, 'label' => app\G::t('Remark'),'width' => '50px'],
 ];
 
-$columnCount = count($columns) - 12 + count($mVisible);
+$mouthCount = count($mVisible);
+$columnCount = count($columns) - 12 + $mouthCount;
 
-$colNameDuration = MyExportMenu::columnName(count($mVisible)+6);
-$colNameCost     = MyExportMenu::columnName(count($mVisible)+7);
+$colNameDuration = MyExportMenu::columnName($mouthCount+6);
+$colNameCost     = MyExportMenu::columnName($mouthCount+7);
 
 $beforeHeader = [
     [
         'columns' => [
             [
-                'content' => '费用结算明细',
+                'content' => $fileTitle,
                 'options' => [
                     'colspan' => $columnCount,
                     'class' => 'text-center warning'
@@ -74,8 +90,8 @@ $beforeHeader = [
             [
                 'content' => '每月出勤工作小时',
                 'options' => [
-                    'colspan' => count($mVisible),
-                    'class' => 'text-center'
+                    'colspan' => $mouthCount,
+                    'class' => $mouthCount > 0 ? 'text-center': 'text-center hidden',
                 ]
             ],
             [ 'content' => '' ],
@@ -216,17 +232,66 @@ $beforeFooterExport = [
 ];
 
 ?>
+
+
 <div class="entry-export">
 
 	<h1><?= Html::encode($this->title) ?></h1>
     <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <div class="input-group text-right" style="padding-bottom: 20px;">
+        <div class="input-group-btn">
+            <button class="btn btn-success" type="button" data-toggle="collapse" data-target="#div-search-condition" aria-expanded="false" aria-controls="div-search-condition">选择过滤条件<span class="caret"></span>
+            </button>
+        </div>
+    </div>
     
+    <div id="div-search-condition" class="collapse entry-search">
+    
+        <?php $form = ActiveForm::begin([
+            'action' => ['export-mh-by-month'],
+            'method' => 'get',
+        ]); 
+        
+            $datePickOptions = ['convertFormat' => true, 'removeButton' => false, 'pluginOptions' => ['todayBtn' => 'linked', 'todayHighlight' => true ], 'options' => ['placeholder' => '不限']];
+        ?>
+    
+        <!-- <h2>过滤条件</h2>  -->
+
+        <table class="form-table table table-bordered">
+            <tr>
+                <td><?= $form->field($model, 'start_date')->label(G::t('Start date'))->widget('kartik\widgets\DatePicker', $datePickOptions ) ?></td>
+                <td><?= $form->field($model, 'end_date')->label(G::t('End date'))->widget('kartik\widgets\DatePicker', $datePickOptions) ?></td>
+            </tr>
+            <tr>
+                <td> 
+                    <?= $form->field($model, 'user_id')->label(G::t('Personal name'))->widget('kartik\widgets\Select2', [
+                        'data' => ArrayHelper::map(User::find()->orderBy('personal_name')->asArray()->all(), 'uid', 'personal_name'),
+                        'options' => ['multiple'=>true],
+                        'pluginOptions' => ['allowClear'=>true, 'placeholder'=>'选择用户(多选)'],
+                    ] ) ?>
+                </td>
+                <td> 
+                    <?= $form->field($model, 'project_id')->label(G::t('Project name'))->widget('kartik\widgets\Select2', [
+                        'data' => ArrayHelper::map(ProjectInfo::find()->orderBy('name')->asArray()->all(), 'id', 'name'),
+                        'pluginOptions' => ['allowClear'=>true, 'placeholder'=>'选择项目(单选)'],
+                    ] ) ?>
+                </td>
+            </tr>
+        </table>
+    
+        <div class="form-group" style="text-align: center; padding: 20px;">
+            <?= Html::submitButton(Yii::t('app', 'Generate report'), ['class' => 'btn btn-primary']) ?>
+            <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
+        </div>
+    
+        <?php ActiveForm::end(); ?>
+    </div>    
+     
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'showFooter' => true,
-        'resizableColumns' => false,
-        //'pjax' => true,
-        //'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container']],        
+        'resizableColumns' => true,      
         'tableOptions' => [ 'class' => 'table table-striped table-bordered', ],
                             //'style' => 'table-layout:fixed'],
         'toolbar'=> [
@@ -237,10 +302,11 @@ $beforeFooterExport = [
                 'autoWidth' => false,
                 'options' => ['id' => 'export_0', 'rowHeight' => '32px', 'headerHeight' => '40px'], //fix 'id' to download exported files
                 'target' => ExportMenu::TARGET_BLANK,
-                'filename' => $this->title,
+                'filename' => $fileTitle,
+                'showColumnSelector' => false,
                 'dropdownOptions' => [
-                    'label' => '导出文件',
-                    'class' => 'btn btn-default',
+                    'label' => '导出表格',
+                    'class' => $mouthCount > 0 ? 'btn btn-default' : 'btn btn-default disabled',
                 ],
                 'exportConfig' => [
                     ExportMenu::FORMAT_TEXT => false,
@@ -263,11 +329,10 @@ $beforeFooterExport = [
         ],
         'panel'=>[
             'type'=>GridView::TYPE_PRIMARY,
-            'heading'=> $this->title,
+            'heading'=> $fileTitle,
         ],
         'beforeHeader' => $beforeHeader,
         'beforeFooter' => $beforeFooter,
         'columns' => $columns,
     ]); ?>
-
 </div>

@@ -24,6 +24,10 @@ $config = [
             // message source
             // 'downloadAction' => 'gridview/export/download',
             // 'i18n' => []
+        ],
+        'treemanager' =>  [
+            'class' => '\kartik\tree\Module',
+            // other module settings, refer detailed documentation
         ]
     ],    
     'components' => [
@@ -82,6 +86,13 @@ $config = [
             'defaultTimeZone' => 'Asia/Shanghai',
         ],
         'db' => require(__DIR__ . '/db.php'),
+        'dbTimeCard' => [
+            'class' => 'yii\db\Connection',
+            'driverName' => 'mssql',
+            'dsn' => 'odbc:DRIVER={SQL Server};Server=192.168.10.129;Database=timecard',
+            'username' => 'sa',
+            'password' => 'sa',
+        ]
     ],
     'params' => $params,
 ];

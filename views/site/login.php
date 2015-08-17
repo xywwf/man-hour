@@ -1,6 +1,8 @@
 <?php
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
+//use yii\bootstrap\ActiveForm;
+use kartik\widgets\ActiveForm;
+use kartik\builder\Form;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
@@ -16,6 +18,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <br/><br/>
     <!--<p>填写账户信息登录工时管理系统:</p>-->
     <br/>
+    
+
     <?php $form = ActiveForm::begin([
         'id' => 'login-form',
         'options' => ['class' => 'form-horizontal', 'style' => "padding-left: 10%;" ],
@@ -29,10 +33,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $form->field($model, 'password')->passwordInput() ?>
 
-    <?= $form->field($model, 'rememberMe')->checkbox(['style' => "margin-left: 50px;"]) ?>
+    <?= $form->field($model, 'rememberMe', ['options' => [ 'style' => 'margin-left: 60px;']])->checkbox() ?>
 
     <div class="form-group">
-        <div class="col-lg-offset-1 col-lg-11">
+        <div class="col-lg-offset-2 col-lg-11" style="margin-top: 20px;">
             <?= Html::submitButton(Yii::t('app', 'Login'), ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
         </div>
     </div>

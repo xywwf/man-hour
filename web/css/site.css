@@ -170,21 +170,11 @@ h1 {
 	overflow: auto;
 }
 
-.ms2side__div {
-	clear: left;
-	width: 100%;
-	padding: 1px;
-	float: left;
-	margin: 20px;
-	background : url('') repeat-x; /* HACK FOR CHROME*/
-}
-
-.ms2side__options {
-	margin-top: 25px;
-}
-
 .kv-align-left button {
 	text-align: left;
 }
 
+.dropup .dropdown-submenu > .dropdown-menu {
+    top: auto;
+    bottom: 0;
 }

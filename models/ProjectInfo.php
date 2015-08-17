@@ -19,7 +19,7 @@ use yii\helpers\ArrayHelper;
  *
  * @property Entry[] $entries
  */
-class Project extends \yii\db\ActiveRecord
+class ProjectInfo extends \yii\db\ActiveRecord
 {
     const STATE_NORMAL   = 0;
     const STATE_FINISHED = 1;
@@ -48,13 +48,13 @@ class Project extends \yii\db\ActiveRecord
 */
     public static function getIdNameMap($condition=null)
     {        
-        $all = Project::find()->select(['id','name'])->andWhere(isset($condition)? $condition : '1=1')->orderBy('id')->asArray()->all();
+        $all = ProjectInfo::find()->select(['id','name'])->andWhere(isset($condition)? $condition : '1=1')->orderBy('id')->asArray()->all();
         return ArrayHelper::map($all, 'id', 'name');
     }
     
     public static function getAllParentProjects($condition=null)
     {
-        $query = Project::find()->select(['id','name'])->andWhere(['parent_id' => null]);
+        $query = ProjectInfo::find()->select(['id','name'])->andWhere(['parent_id' => null]);
         if (isset($condition))
         {
             $query->andWhere($condition);
@@ -94,7 +94,6 @@ class Project extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 64],
             [['color'], 'string', 'max' => 7],
             [['description'], 'string', 'max' => 400],
-            [['name'], 'unique']
         ];
     }
 

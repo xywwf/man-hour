@@ -10,7 +10,7 @@ use app\models\Department;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Departments');
+$this->title = Yii::t('app', 'Geely departments');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="department-index">

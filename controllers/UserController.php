@@ -6,6 +6,7 @@ use Yii;
 use app\G;
 use app\models\User;
 use app\models\UserSearch;
+use app\models\PasswordForm;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -32,6 +33,10 @@ class UserController extends \app\MyController
      */
     public function actionIndex()
     {
+        if (!Yii::$app->user->identity->isAdmin()){
+            throw  new yii\web\BadRequestHttpException("No permission");
+        }
+        
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -67,6 +72,10 @@ class UserController extends \app\MyController
      */
     public function actionCreate()
     {
+        if (!Yii::$app->user->identity->isAdmin()){
+            throw  new yii\web\BadRequestHttpException("No permission");
+        }        
+        
         $model = new User();
         $model->type = User::TYPE_NORMAL;
 
@@ -90,11 +99,16 @@ class UserController extends \app\MyController
      */
     public function actionUpdate($id)
     {
+        if (!Yii::$app->user->identity->isAdmin()){
+            $id = Yii::$app->user->identity->uid;
+        }
+
         $model = $this->findModel($id);       
         
         if ($model->load(Yii::$app->request->post())) {
             if ($model->saveUserAndAuth()){
                 G::flash('success', 'Save successfully!');
+                return $this->redirect(['index']);
             } else {
                 G::flash('error', 'Save unsuccessfully!');
             }
@@ -106,6 +120,34 @@ class UserController extends \app\MyController
     }
 
     /**
+     * Change password of an existing User model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionPassword($id)
+    {
+        if (!Yii::$app->user->identity->isAdmin()){
+            $id = Yii::$app->user->identity->uid;
+        }
+    
+        $model = new PasswordForm();
+        $model->id = $id;
+    
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()){
+                G::flash('success', 'Change password successfully!');
+            } else {
+                G::flash('error', 'Change password failed!');
+            }
+        }
+    
+        return $this->render('password', [
+            'model' => $model,
+        ]);
+    }
+    
+    /**
      * Reset the password of an existing User model.
      * @param string $id
      * @return mixed
@@ -116,9 +158,9 @@ class UserController extends \app\MyController
         
         $model->password = Yii::$app->params['defaultPassword'];   
         if( $model->saveUserAndAuth() ) {
-            G::flash('success', 'Save successfully!');            
+            G::flash('success', 'Change password successfully!');            
         }else {
-            G::flash('error', 'Save unsuccessfully!');
+            G::flash('error', 'Change password failed!');
         }
     
         return $this->render('update', [
@@ -161,7 +203,7 @@ class UserController extends \app\MyController
      */
     public function actionDeletes($ids)
     {
-        if (User::deleteAll(['in', 'id', explode(',', $ids)])){
+        if (User::deleteAll(['in', 'uid', explode(',', $ids)])){
             G::flash('success', 'Delete successfully!');
         }else{
             G::flash('error', 'Delete unsuccessfully!');

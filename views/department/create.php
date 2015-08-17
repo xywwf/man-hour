@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Department */
 
-$this->title = Yii::t('app', 'Create new department');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Departments'), 'url' => ['index']];
+$this->title = Yii::t('app', 'Add new department');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Geely departments'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="department-create">

@@ -18,7 +18,7 @@ class ViewEntrySearch extends ViewEntry
     public function rules()
     {
         return [
-            [['id', 'user_id', 'project_id', 'update_user_id'], 'integer'],
+            [['id', 'user_id', 'project_id', 'update_user_id', 'state'], 'integer'],
             [['personal_name', 'project_name', 'start_date', 'start_time', 'description', 'update_time', 'update_user_name'], 'safe'],
         ];
     }
@@ -59,6 +59,7 @@ class ViewEntrySearch extends ViewEntry
             'id' => $this->id,
             'user_id' => $this->user_id,
             'project_id' => $this->project_id,
+            'state' => $this->state,
             //'start_date' => $this->start_date,
             //'start_time' => $this->start_time,
             //'update_time' => $this->update_time,

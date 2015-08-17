@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Entry;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\EntrySearch */
@@ -25,8 +27,10 @@ $page = Yii::$app->getRequest()->get('page');
     
         <?= Html::a(Yii::t('app', '+Add a manhour log'), ['create'], [
             'class' => 'btn btn-success', 
-            'onclick' => 'fancybox(this); return false;',
+            //'onclick' => 'fancybox(this); return false;',
             'data-pjax' => '0',
+            'data-toggle' => "modal",
+            'data-target' => "#modalEntryForm",
         ]) ?>
     </p>
     
@@ -51,8 +55,15 @@ $page = Yii::$app->getRequest()->get('page');
                $mins = $model->duration / 60;
                return sprintf('%02d', $mins / 60) .':' . sprintf('%02d', $mins % 60);
             }
-            ],            
-            [ 'attribute' => 'description', 'headerOptions' => ['width' => '400' ]],            
+            ],
+            [ 'attribute' => 'description', 'headerOptions' => ['width' => '400' ]], 
+            [ 'attribute' => 'state', 'headerOptions' => ['width' => '60' ], 'visible' => $user->isAdmin(),
+                'filter' => Entry::getStateMap(),
+                'value'  => function($model)
+                {
+                    return ArrayHelper::getValue(Entry::getStateMap(), $model->state);
+                },
+            ],
             // 'update_time',
             // 'update_user_id',
             // 'type',
@@ -69,10 +80,10 @@ $page = Yii::$app->getRequest()->get('page');
                     'update' => function ($url) {
                         return Html::a(
                             '<span class="glyphicon glyphicon-pencil"></span>',
-                            $url,     //这里就可以加各种参数了，调用各种挂件
+                            $url . '&modal=1',     //这里就可以加各种参数了，调用各种挂件
                             [
                                 'title' => '修改',
-                                'onclick' => 'fancybox(this); return false;',
+                                //'onclick' => 'openModal(this); return false;',
                             ]
                         );
                     },
@@ -81,7 +92,23 @@ $page = Yii::$app->getRequest()->get('page');
         ],
     ]); ?>
 
+    <?php yii\bootstrap\Modal::begin(['id' => 'modalEntryForm', 'header' =>'<h2>'. Yii::t('app', '+Add a manhour log') . '</h2>']); ?>
+    <?php echo $this->render('_form', ['model' => new Entry()])?>
+    <?php yii\bootstrap\Modal::end(); ?>
 </div>
 
+<?php 
+$js = "
+    function openModal(item){
+        var url = $(item).attr('href');
+        $.get(url, '', function(data){
+            $('#modalEntryForm .modal-body').html(data);
+            entryFormInit();
+        });
+        $('#modalEntryForm').modal({show:true,backdrop:false});
+    }
+";
+    //$this->registerJs($js, yii\web\View::POS_END);
+?>
 <?php \app\G::registerJsDeleteSelected($this); ?>
-<?php \app\G::registerJsFancyBox($this); ?>
+<?php //\app\G::registerJsFancyBox($this); ?>

@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
-use app\models\Project;
+use app\models\ProjectInfo;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Project */
@@ -19,7 +19,7 @@ use app\models\Project;
         <tr>
             <td width="55%"><?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?></td>
             <td width="5%"></td>
-            <td><?= $form->field($model, 'state')->dropDownList(Project::$state_map) ?></td>
+            <td><?= $form->field($model, 'state')->dropDownList(ProjectInfo::$state_map) ?></td>
         </tr>
         <tr>
             <td rowspan="4"><?= $form->field($model, 'description')->textarea(['rows' => "8", 'cols' => 50]) ?></td>

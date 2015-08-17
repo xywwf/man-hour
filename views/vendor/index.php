@@ -10,7 +10,7 @@ use app\models\Vendor;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Vendors');
+$this->title = Yii::t('app', 'Suppliers');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="vendor-index">
@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div>
 <?php 
-    Modal::begin(['id' => 'addNew', 'header' => \app\G::t('Add new vendor')]);
+    Modal::begin(['id' => 'addNew', 'header' => \app\G::t('Add new supplier')]);
         $model = new Vendor();
         echo $this->render('_form', ['model' => $model]);
     Modal::end();    

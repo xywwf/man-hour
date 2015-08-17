@@ -59,10 +59,10 @@ $user = Yii::$app->user->identity;
             <div class="panel panel-info">
                 <div class="panel-heading"><span class="glyphicon glyphicon-user"></span>修改用户信息</div>
                 <div class="panel-body">
-                    <p><?= Html::a('更新个人信息&raquo;', ['user/update', 'id' => $user->uid], [
+                    <p><?= Html::a(app\G::t('Update user information') . '&nbsp;&raquo;', ['user/update', 'id' => $user->uid], [
                             'class' => 'btn btn-success', 
                         ]) ?>
-                        <?= Html::a('修改密码&raquo;', ['user/update', 'id' => $user->uid], [
+                        <?= Html::a(app\G::t('Change password') . '&nbsp;&raquo;', ['user/password', 'id' => $user->uid], [
                             'class' => 'btn btn-success', 
                         ]) ?>
                     </p>                    
@@ -105,6 +105,14 @@ function createCharts( last_date, days ) {
         };
         
         $.extend(series[0], series0);
+    
+        //replace the color with the project color
+        //var colors = Highcharts.getOptions().colors;        
+        //for (var i = 1; i < series.length; i++ ){
+        //    if (series[i].color != "") {
+                //colors[i] = series[i].color;
+        //    }
+        //}
     
         var title =  '<?= Yii::t('app', 'Working hour statistics in one week') ?>';
     
@@ -161,7 +169,8 @@ function createCharts( last_date, days ) {
                     //pointStart: Date.UTC(2010, 0, 1),
                 },
             },
-            series: series
+            series: series,
+            //colors: colors
         };
         
         $("#index-chart").highcharts( options );

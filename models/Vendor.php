@@ -49,8 +49,8 @@ class Vendor extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'Vendor ID'),
-            'name' => Yii::t('app', 'Vendor name'),
+            'id' => Yii::t('app', 'Supplier ID'),
+            'name' => Yii::t('app', 'Supplier company name'),
         ];
     }
 }

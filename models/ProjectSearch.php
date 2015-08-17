@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Project;
+use app\models\ProjectInfo;
 
 /**
  * ProjectSearch represents the model behind the search form about `app\models\Project`.
  */
-class ProjectSearch extends Project
+class ProjectSearch extends ProjectInfo
 {
     /**
      * @inheritdoc
@@ -41,7 +41,7 @@ class ProjectSearch extends Project
      */
     public function search($params)
     {
-        $query = Project::find();
+        $query = ProjectInfo::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

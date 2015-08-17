@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\editable\Editable;
 use yii\widgets\Pjax;
-use app\models\Project;
+use app\models\ProjectInfo;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
@@ -108,10 +108,10 @@ $page = Yii::$app->getRequest()->get('page');
                     'attribute' => 'parent_id',
                     //'header' => \app\G::t('Parent project name'),
                     //'filterType' => GridView::FILTER_SELECT2,
-                    'filter' => Project::getAllParentProjects(),
+                    'filter' => ProjectInfo::getAllParentProjects(),
                     'value' => function($model)
                     {
-                        $map = Project::getIdNameMap();
+                        $map = ProjectInfo::getIdNameMap();
                         //var_dump($map);
                         //Yii::$app->end();
                         return $model->parent_id === null ? null : $map[strval($model->parent_id)];
@@ -138,18 +138,18 @@ $page = Yii::$app->getRequest()->get('page');
                     'vAlign'=>'middle',
                     'width' => '80px',
                     'filterType' => GridView::FILTER_SELECT2,
-                    'filter' => Project::$state_map,
+                    'filter' => ProjectInfo::$state_map,
                     'filterWidgetOptions'=>['pluginOptions'=>['allowClear'=>true],],
                     'filterInputOptions'=>['placeholder'=>'Any status', 'multiple'=>true],
                     'value' => function($model)
                     {
-                        return Project::$state_map[$model->state];
+                        return ProjectInfo::$state_map[$model->state];
                     },
                     'editableOptions' => [ 'asPopover' => true,
                         'inputType' => Editable::INPUT_DROPDOWN_LIST,
                         'submitOnEnter' => false,
                         'showButtonLabels' => true,
-                        'data' => Project::$state_map,
+                        'data' => ProjectInfo::$state_map,
                     ],
                 ],
                 [   'class'=>'kartik\grid\EditableColumn',

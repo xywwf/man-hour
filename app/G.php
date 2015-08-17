@@ -2,6 +2,8 @@
 namespace app;
 
 use Yii;
+use app\models\Setting;
+use yii\helpers\ArrayHelper;
 
 //The class used to contain global common functions
 class G
@@ -27,6 +29,32 @@ class G
     public static function isEn()
     {
         return Yii::$app->language == 'en-US';
+    }
+    
+    public static function getSetting($id = null, $default = null){
+        if (isset($id)){
+            return ArrayHelper::getValue(Setting::findOne(['id' => $id]), 'value', $default);
+        }
+        
+        return ArrayHelper::map(Setting::find()->asArray()->all(), 'id', 'value');
+    }
+
+    public static function getSettingByName($name = null, $default = null){
+        if (isset($name)){
+            return ArrayHelper::getValue(Setting::findOne(['name' => $name]), 'value', $default);
+        }
+    
+        return ArrayHelper::map(Setting::find()->asArray()->all(), 'name', 'value');
+    }
+    
+    public static function setSettingByName($name, $value){
+        if (isset($name)){
+            $model = Setting::findOne(['name' => $name]);
+            $model->value = $value;
+            return $model->save();
+        }
+    
+        return false;
     }
     
     public static function showDateFull($date)
@@ -82,7 +110,6 @@ $js = "
         \newerton\fancybox\FancyBoxAsset::register($view);
         $view->registerJs($js, yii\web\View::POS_END);
     }
-    
 }
 
 ?>

@@ -89,7 +89,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             [['type', 'created_by', 'last_updated_by', 'ext', 'department_id', 'company_id'], 'integer'],
             [['price'], 'number'],
-            [['username', 'personal_name'], 'required'],
+            [['username', 'personal_name', 'employe_id'], 'required'],
             [['created_time', 'last_updated_time', 'password'], 'safe'],
             [['username', 'personal_name', 'personal_id', 'employe_id', 'mobile'], 'string', 'max' => 24],
             [['email'], 'string', 'max' => 64],
@@ -110,9 +110,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'username' => Yii::t('app', 'Username'),
             'personal_name' => Yii::t('app', 'Personal name'),
             'personal_id' => Yii::t('app', 'Identity card'),
-            'employe_id' => Yii::t('app', 'Employe ID'),
-            'department_id' => Yii::t('app', 'Department name'),
-            'company_id' => Yii::t('app', 'Company name'),
+            'employe_id' => Yii::t('app', 'Employe ID(To sync attendence DB)'),
+            'department_id' => Yii::t('app', 'Geely department'),
+            'company_id' => Yii::t('app', 'Supplier name'),
+            'experience' => Yii::t('app', 'Experience(Years)'),
             'price' => Yii::t('app', 'Price/Hour'),
             'mobile' => Yii::t('app', 'Mobile'),
             'email' => Yii::t('app', 'Email'),
@@ -173,6 +174,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
         
         $thisModel = $this;
+        $thisModel->password = '';
         return $this->getDb()->transaction( function() use (&$thisModel, &$userAuth) {
             if ( $thisModel->save() ) {
                 $userAuth->uid = $thisModel->uid;

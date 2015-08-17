@@ -40,9 +40,9 @@ class MyController extends \yii\web\Controller
         return Yii::$app->getRequest()->get($name, $defaultValue);
     }
 
-    public function req($name = null, $defaultValue = null)
+    public static function req($name = null, $defaultValue = null)
     {
-        return static::getRequest($name, $defaultValue);
+        return self::getRequest($name, $defaultValue);
     }
     
 }

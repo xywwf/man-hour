@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\G;
 use Yii;
 use app\models\Vendor;
 use yii\data\ActiveDataProvider;
@@ -134,6 +135,18 @@ class VendorController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionDeletes($ids)
+    {
+        if (Vendor::deleteAll(['in', 'id', explode(',', $ids)])){
+            G::flash('success', 'Delete successfully!');
+        }else{
+            G::flash('error', 'Delete unsuccessfully!');
+        }
+    
+        return $this->redirect(['index']);
+    }
+    
+    
     /**
      * Finds the Vendor model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

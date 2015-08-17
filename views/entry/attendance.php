@@ -1,9 +1,13 @@
 <?php
 
+use app\G;
+use app\models\User;
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use kartik\export\ExportMenu;
 use kartik\export\MyExportMenu;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\EntrySearch */
@@ -30,7 +34,7 @@ $beforeHeader = [
     [
         'columns' => [
             [
-                'content' => '2015年8月',
+                'content' => $fileTitle,
                 'options' => [
                     'colspan' => 9,
                     'class' => 'text-right warning'
@@ -72,7 +76,46 @@ Yii::$app->formatter->nullDisplay = '';
 
 	<h1><?= Html::encode($this->title) ?></h1>
     <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="input-group text-right" style="padding-bottom: 20px;">
+        <div class="input-group-btn">
+            <button class="btn btn-success" type="button" data-toggle="collapse" data-target="#div-search-condition" aria-expanded="false" aria-controls="div-search-condition">选择过滤条件<span class="caret"></span>
+            </button>
+        </div>
+    </div>
     
+    <div id="div-search-condition" class="collapse entry-search">
+    
+        <?php $form = ActiveForm::begin([
+            'action' => ['export-attendance'],
+            'method' => 'get',
+        ]); 
+        
+            $datePickOptions = ['convertFormat' => true, 'removeButton' => false, 'options' => ['placeholder' => '不限'],
+                'pluginOptions' => ['todayBtn' => 'linked', 'todayHighlight' => true, 'minViewMode' => 1, 'format' => 'yyyy-MM' ],
+            ];
+        ?>
+    
+        <!-- <h2>过滤条件</h2>  -->
+
+        <table class="form-table table table-bordered">
+            <tr>
+                <td> 
+                    <?= $form->field($model, 'user_id')->label(G::t('Personal name'))->widget('kartik\widgets\Select2', [
+                        'data' => ArrayHelper::map(User::find()->orderBy('personal_name')->asArray()->all(), 'uid', 'personal_name'),
+                        'pluginOptions' => ['placeholder'=>'选择用户(单选)'],
+                    ] ) ?>
+                </td>
+                <td><?= $form->field($model, 'start_date')->label('选择年月份')->widget('kartik\widgets\DatePicker', $datePickOptions) ?></td>
+            </tr>
+        </table>
+    
+        <div class="form-group" style="text-align: center; padding: 20px;">
+            <?= Html::submitButton(Yii::t('app', 'Generate report'), ['class' => 'btn btn-primary']) ?>
+            <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
+        </div>
+    
+        <?php ActiveForm::end(); ?>
+    </div>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'showFooter' => true,
@@ -89,7 +132,8 @@ Yii::$app->formatter->nullDisplay = '';
                 'autoWidth' => false,
                 'options' => ['id' => 'export_0', 'rowHeight' => '32px', 'headerHeight' => '60px'], //fix 'id' to download exported files
                 'target' => ExportMenu::TARGET_BLANK,
-                'filename' => $this->title,
+                'filename' => $fileTitle,
+                'showColumnSelector' => false,
                 'dropdownOptions' => [
                     'label' => '导出表格',
                     'class' => 'btn btn-default',
@@ -108,7 +152,7 @@ Yii::$app->formatter->nullDisplay = '';
         ],
         'panel'=>[
             'type'=>GridView::TYPE_PRIMARY,
-            'heading'=> $this->title,
+            'heading'=> $fileTitle,
         ],
         'beforeHeader' => $beforeHeader,
         'beforeFooter' => $beforeFooter,

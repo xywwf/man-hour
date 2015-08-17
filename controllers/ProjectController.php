@@ -4,9 +4,11 @@ namespace app\controllers;
 
 use Yii;
 use app\G;
-use app\models\Project;
+use app\models\ProjectInfo;
 use app\models\ProjectSearch;
+use app\models\ProjectNode;
 use yii\web\NotFoundHttpException;
+use yii\web\BadRequestHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 
@@ -71,6 +73,43 @@ class ProjectController extends  \app\MyController
         ]);
     }
 
+    
+    public function actionTree()
+    {
+        return $this->render('tree');
+    }
+    
+    public function actionTreeInitRoot($id)
+    {
+        $model = ProjectNode::findOne($id);
+        if ($model === null) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        if (!$model->isRoot()){
+            throw new BadRequestHttpException('The can only be done on root project.');
+        }
+        
+        $count = $model->rootInitDefTree();
+        if ($count > 0){
+            Yii::$app->getSession()->setFlash('success', Yii::t('app', 'Processed {count} records successfully.', ['count' => $count ]));
+        } else {
+            G::flash('error', 'Save unsuccessfully!');
+        }
+        
+        return $this->redirect('tree');
+    }
+    
+    
+    public function actionTest()
+    {
+        //$node = \app\models\ProjectNode::findOne(['id'=>2]);
+        //print_r($node);
+        //$items = $node->renderDropdownItems();
+        //print_r($items);
+        \app\models\ProjectNode::getAllItems();
+    }
+    
     /**
      * Displays a single Project model.
      * @param string $id
@@ -90,7 +129,7 @@ class ProjectController extends  \app\MyController
      */
     public function actionCreate()
     {
-        $model = new Project();
+        $model = new ProjectInfo();
         
         if ($model->load(Yii::$app->request->post())) {
             if ($model->save()){
@@ -161,7 +200,7 @@ class ProjectController extends  \app\MyController
      */
     public function actionDeletes($ids)
     {
-        if (Project::deleteAll(['in', 'id', explode(',', $ids)])){
+        if (ProjectInfo::deleteAll(['in', 'id', explode(',', $ids)])){
             G::flash('success', 'Delete successfully!');
         }else{
             G::flash('error', 'Delete unsuccessfully!');
@@ -175,12 +214,12 @@ class ProjectController extends  \app\MyController
      * Finds the Project model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return Project the loaded model
+     * @return ProjectInfo the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Project::findOne($id)) !== null) {
+        if (($model = ProjectInfo::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

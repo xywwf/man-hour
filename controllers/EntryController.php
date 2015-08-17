@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
+use app\models\ProjectInfo;
 
 /**
  * EntryController implements the CRUD actions for Entry model.
@@ -28,7 +29,7 @@ class EntryController extends \app\MyController
             ],
         ];
     }
-
+        
     /**
      * Lists all Entry models.
      * @return mixed
@@ -40,7 +41,7 @@ class EntryController extends \app\MyController
         
         $id = Yii::$app->user->identity;
         if (!$id->isAdmin()){
-            $dataProvider->query->andWhere(['user_id' => $id->uid]);
+            $dataProvider->query->andWhere(['user_id' => $id->uid, 'state' => Entry::STATE_NORMAL]);
         }
         
         if( $this->req('page') === 'last' )
@@ -94,7 +95,7 @@ class EntryController extends \app\MyController
         $first_date = date( 'Y-m-d', strtotime( '-'.($days-1).' days' ,strtotime($last_date)));
 
         //reuse the id as the day index starting from 'first_day'
-        $models = ViewEntry::find()->select(['project_id', 'project_name', 'DATEDIFF(start_date, "'.$first_date.'") as id', 'sum(duration) as duration'])
+        $models = ViewEntry::find()->select(['project_id', 'project_name', 'color', 'DATEDIFF(start_date, "'.$first_date.'") as id', 'sum(duration) as duration'])
             ->where(['user_id'=>$uid])->andWhere(['between', 'start_date', $first_date, $last_date ])
             ->groupBy(['project_id', 'start_date'])
             //->orderBy('project_id, start_date')
@@ -106,6 +107,9 @@ class EntryController extends \app\MyController
             $project_id = $model->project_id; //start from '1' as '0' is for the project count
             if( !array_key_exists($model->project_id, $series) ){
                 $series[$model->project_id] = [ 'name' => $model->project_name, 'data' => array_fill(0, $days, 0) ];
+                if (!empty($model->color)) {
+                    $series[$model->project_id]['color'] = $model->color;
+                }
             }
             $series[$model->project_id]['data'][$model->id] = round($model->duration / 36 ) / 100; //保留两位小数
             $series[0]['data'][$model->id]++; 
@@ -160,14 +164,39 @@ class EntryController extends \app\MyController
      */
     public function actionExportMhByMonth()
     {
-        //reuse the id as the day index starting from 'first_day'
-        $results = 
+        $searchModel = new ViewEntrySearch();
+        $searchModel->load( Yii::$app->request->queryParams );
+        
+        $query = 
             ViewEntry::find()->select([
                 'year(start_date) as year','user_id','personal_name', 'experience', 'price', 'month(start_date) as month', 
-                "date_format(start_date, '%Y%c')",  'sum(duration) as duration'
+                "date_format(start_date, '%Y%c') as id",  'sum(duration) as duration'
             ])
-            ->groupBy(['user_id', "date_format(start_date, '%Y%c')"])
-            ->asArray()->all();
+            ->groupBy(['user_id', "date_format(start_date, '%Y%c')"]);
+        
+        $user_id    = [];
+        $project_id = [];
+        $start_date = null;
+        $end_date   = null;
+        
+        $search = $this->req('ViewEntrySearch');
+        if (isset($search)){
+            $user_id    = $search['user_id'];
+            $project_id = $search['project_id'];
+            $start_date = $search['start_date'];
+            $end_date   = $search['end_date'];
+        }
+        
+        $query->andFilterWhere(['in', 'user_id', $user_id ]);
+        $query->andFilterWhere(['in', 'project_id', $project_id ]);
+        
+        $query->andFilterWhere(['<=', 'start_date', $end_date ]);
+        $query->andFilterWhere(['>=', 'start_date', $start_date ]);
+        
+        //print_r($query);
+        //Yii::$app->end();
+        
+        $results = $query->asArray()->all();
         
         $months = [];
         $tmps = [];
@@ -200,15 +229,27 @@ class EntryController extends \app\MyController
         
         //$searchModel = new ViewEntrySearch();
         $dataProvider = new ArrayDataProvider([
+            'key' => 'id',
             'allModels' => $models,
             'pagination' => false,
         ]);
+        
+        $project_name = ArrayHelper::getValue(ProjectInfo::findOne($project_id), 'name');
+        
+        if (!isset($end_date) || empty($end_date)){
+            $end_date  = date('Y-m-d');
+        }
+        
+        $fileTitle = (isset($start_date) ? $start_date : '') . '至' . $end_date
+        . (isset($project_name) ? '投入' . $project_name : '');
         
         return $this->render('timecost', [
             //'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'totalCost' => $totalCost,
             'mVisible' => $months,
+            'model' => $searchModel,
+            'fileTitle' => $fileTitle,
         ]);
     }
     
@@ -221,14 +262,46 @@ class EntryController extends \app\MyController
      */
     public function actionExportAttendance()
     {
-        //reuse the id as the day index starting from 'first_day'
-        $results =
+        $searchModel = new ViewEntrySearch();
+        $searchModel->load( Yii::$app->request->queryParams );
+
+        $query =
             ViewEntry::find()->select([
                 'company','personal_name', 'day(start_date) as day', 'min(start_time) as start_time', 'max(end_time) as end_time', 'sum(duration) as duration'
             ])
-            ->groupBy(['start_date'])->orderBy('day')
-            ->asArray()->all();
-            
+            ->groupBy(['start_date'])->orderBy('day');
+        
+        $user_id    = null;
+        $start_date = null;
+        
+        $search = $this->req('ViewEntrySearch');
+        if (isset($search)){
+            $user_id    = $search['user_id'];
+            $start_date = $search['start_date'];
+        }
+        
+        $query->andWhere(['user_id' => $user_id]);
+        
+        $d = getdate();
+        if (isset($start_date)){
+            $t = date_parse_from_format("Y-n", $start_date);
+            if (!empty($t['year'])){
+                $d['year'] =$t['year'];
+            }
+            if (!empty($t['month'])){
+                $d['mon'] = $t['month'];
+            }
+        }
+                       
+        $query->andWhere(['<=', 'start_date', strftime( '%Y-%m-%d', mktime(0, 0, 0, $d['mon'] + 1, 1, $d['year'])) ]);
+        $query->andWhere(['>=', 'start_date', strftime( '%Y-%m-%d', mktime(0, 0, 0, $d['mon'], 1, $d['year'])) ]);
+        
+        $fileTitle = $d['year'] . '-' . $d['mon'] . Yii::t('app', 'Attendance table');
+        
+        //print_r($query);
+        //Yii::$app->end();
+        
+        $results = $query->asArray()->all();
         $results = ArrayHelper::index($results, function($elem){ return intval($elem['day']);} );
         
         $total = 0;
@@ -255,10 +328,11 @@ class EntryController extends \app\MyController
         ]);
     
         return $this->render('attendance', [
-            //'searchModel' => $searchModel,
+            'model' => $searchModel,
             'dataProvider' => $dataProvider,
             //'mVisible' => $months,
             'total' => $total,
+            'fileTitle' => $fileTitle,
         ]);
     }    
     
@@ -311,6 +385,7 @@ class EntryController extends \app\MyController
         if ($model->load(Yii::$app->request->post())) {
             if ($model->save()){
                 G::flash('success', 'Save successfully!');
+                return $this->redirect(['index']);
             } else {
                 G::flash('error', 'Save unsuccessfully!');
             }
@@ -329,15 +404,49 @@ class EntryController extends \app\MyController
      */
     public function actionDelete($id)
     {
-        if ($this->findModel($id)->delete()){
+        $result = false;
+        $model = $this->findModel($id);
+        
+        if (!Yii::$app->user->identity->isAdmin()){
+            $model->state = Entry::STATE_DELETED;
+            $result = $model->update();
+        } else {
+            $result = $model->delete();
+        }
+        
+        if ($result){
             G::flash('success', 'Delete successfully!');
         } else {
             G::flash('error', 'Delete unsuccessfully!');
         }
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'page' => $this->req('page')]);
     }
 
+    /**
+     * Deletes an existing Entry model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionDeletes($ids)
+    {
+        $result = false;
+        if (!Yii::$app->user->identity->isAdmin()){
+            $result = Entry::updateAll( ['state' => Entry::STATE_DELETED] ,['in', 'id', explode(',', $ids)]);
+        } else {
+            $result = Entry::deleteAll(['in', 'id', explode(',', $ids)]);
+        }
+        if ($result){
+            G::flash('success', 'Delete successfully!');
+        }else{
+            G::flash('error', 'Delete unsuccessfully!');
+        }
+        
+        return $this->redirect(['index', 'page' => $this->req('page')]);
+    }    
+    
+    
     /**
      * Finds the Entry model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

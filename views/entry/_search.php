@@ -4,7 +4,7 @@ use app\G;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\User;
-use app\models\Project;
+use app\models\ProjectInfo;
 use app\widgets\DateTimePicker;
 
 /* @var $this yii\web\View */
@@ -47,7 +47,7 @@ use app\widgets\DateTimePicker;
          
                 <div class="collapse" id="div-select-project_name">
                     <select name="entry-project" id='entry-project' multiple='multiple' size='4'>
-                    <?php $projects = Project::find()->select('id, name')->andWhere(['not', ['state'=>Project::STATE_CLOSED]])->asArray()->all(); ?>
+                    <?php $projects = ProjectInfo::find()->select('id, name')->andWhere(['not', ['state'=>ProjectInfo::STATE_CLOSED]])->asArray()->all(); ?>
                     <?php foreach ($projects as $project) :?>
                         <option value="<?= $project['id']?>"><?= $project['name']?></option>
                     <?php endforeach?>       

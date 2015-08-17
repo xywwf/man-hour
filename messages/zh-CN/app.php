@@ -24,6 +24,11 @@ return [
     'Create' => '创建',
     'Update' => '更新',
     'Processed {count} records successfully.' => '成功保存{count}条记录！',
+    'Normal' => '正常',
+    'Deleted' => '已删除',
+    'Finished' => '已完成',
+    'Closed' => '关闭',
+    
     
     //Main page
     'Welcome to ' => '欢迎使用',
@@ -35,14 +40,30 @@ return [
     'Project' =>'项目管理',
     'Export' =>'工时导出',
     'Management' => '系统管理',
-    'Vendor' => '供应商管理',
-    'Department' => '部门管理',
+    'Supplier' => '供应商管理',
+    'Department' => '吉利部门管理',
     'Setting' => '系统设置',
+    'Update user information' => '更新用户信息',
+    'Change password' => '修改密码',
+    'Sync attendance' => '同步考勤数据',
+    
+    
+    //Setting page
+    'In how many days can modify entry logs' => '可以录入\修改多少天内的工时记录',
+    'Initial user password' => '初始用户密码',
+    'Reset to default' => '恢复默认值',
+    'Attendance DB sync start AutoID' => '考勤数据库同步起始AutoID',
+    'Attendance DB name' => '考勤数据库名称',
+    'Attendance DB password' => '考勤数据库密码',
+    'Attendance DB server' => '考勤数据库服务器地址',
+    'Attendance DB username' => '考勤数据库用户名',
        
     //Login page
     'Login' => '登录',
     'Logout' => '登出',
     'Remember me' => '记住我',
+    'Enter username...' => '请输入用户名..',
+    'Enter password...' => '请输入密码..',
     'Incorrect username or password!' => '用户名或密码不正确！',
     
     //User index page
@@ -68,9 +89,10 @@ return [
     'Username' => '用户名',
     'Personal name' => '姓名',
     'Identity card' => '身份证',
-    'Employe ID' => '员工号',
+    'Employe ID(To sync attendence DB)' => '员工号(用于同步考勤数据库)',
     'Department ID' => '部门号',
-    'Department name' => '部门名称',
+    'Geely department' => '吉利部门',
+    'Supplier name' => '供应商名称',
     'Mobile' => '手机号',
     'Email' => '邮箱帐号',
     'Experience(Years)' => '工作经验(年)',
@@ -86,6 +108,12 @@ return [
     'Batch delete users' => '批量删除用户',
     'Synchronize user list' => '同步用户列表',
     
+    'Old password' => '旧密码',
+    'New password' => '新密码',
+    'Confirm password' => '确认密码',
+    'Change password successfully!' => '修改密码成功！',
+    'Change password failed!' => '修改密码失败！',
+    
     'Uninitialized'   => '未启用用户',
     'Super admin'     => '超级管理员',
     'Administrator'   => '管理员',
@@ -95,14 +123,14 @@ return [
     
     
     //Department table
-    'Departments' => '部门列表',
-    'Department name' => '部门名称',
+    'Geely departments' => '吉利部门列表',
+    'Geely department name' => '吉利部门名称',
     'Add new department' => '添加新部门',    
 
     //Vendor table
-    'Vendors' => '供应商列表',
-    'Vendor name' => '供应商名称',
-    'Add new vendor' => '添加新供应商',
+    'Suppliers' => '供应商列表',
+    'Supplier company name' => '供应商公司名称',
+    'Add new supplier' => '添加新供应商',
     
     //Project table
     'Project ID' => '项目号',
@@ -112,9 +140,6 @@ return [
     'Target date' => '预计完成日期',
     'Finish date' => '完成日期',
     'Project description' => '项目描述',
-    'Normal' => '正常',
-    'Finished' => '已完成',
-    'Closed' => '关闭',
     '+Add new project' => '+添加新项目',
     'Batch delete projects' => '批量删除项目',    
     'Modify project information' =>'修改项目内容',
@@ -123,6 +148,7 @@ return [
     'Color' => '颜色',
     'Choose' => '选择',
     'Cancel' => '取消',
+    'Add default children projects' => '添加默认子项目树',
 
     //Entry table
     'Manhour log ID' => '工时记录ID',
@@ -137,6 +163,8 @@ return [
         
     '+Add a manhour log'   => '+登记新工时',
     'Batch delete logs' => '批量删除记录',    
+    'Quick adding desciption' => '快捷插入项目描述',
+    'Time overlaps other log!' => '时间与其它记录有重叠！',
     
     //Export
     'Manhour statistics by person & month' => '费用结算明细',

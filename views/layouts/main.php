@@ -10,6 +10,7 @@ use app\assets\AppAsset;
 /* @var $content string */
 
 AppAsset::register($this);
+$user = Yii::$app->user->identity;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -42,30 +43,41 @@ AppAsset::register($this);
                 
                 $navItems[] =  ['label' => Yii::t('app', 'Manhour'), 'url' => ['/entry/index']];
             
-                if( Yii::$app->user->identity->isAdmin() )
+                if( $user->isAdmin() )
                 {
                     $navItems[] =  ['label' => Yii::t('app', 'Export'),
                         'items' => [
                             ['label' => Yii::t('app', 'Export manhour cost by month'), 'url' => ['/entry/export-mh-by-month']],
                             ['label' => Yii::t('app', 'Export attendance by person'), 'url' => ['/entry/export-attendance']],
-                            '<li class="divider"></li>',
-                            ['label' => Yii::t('app', 'Export generally'), 'url' => ['/entry/export']],
+                            //'<li class="divider"></li>',
+                            //['label' => Yii::t('app', 'Export generally'), 'url' => ['/entry/export']],
                        ],
                     ];
                     //$navItems[] = ['label' => Yii::t('app', 'Project'), 'url' => ['/project/index']];
                     $navItems[] = ['label' => Yii::t('app', 'Management'),
                         'items' => [
-                            ['label' => Yii::t('app', 'Project'), 'url' => ['/project/index']],
+                            ['label' => Yii::t('app', 'Project'), 'url' => ['/project/tree']],
                             '<li class="divider"></li>',
                             ['label' => Yii::t('app', 'User'), 'url' => ['/user/index']],
-                            ['label' => Yii::t('app', 'Vendor'), 'url' => ['/vendor/index']],
-                            ['label' => Yii::t('app', 'Department'), 'url' => ['/department/index']],
+                            ['label' => Yii::t('app', 'Department'), 'url' => ['/department/index']],                            
+                            ['label' => Yii::t('app', 'Supplier'), 'url' => ['/vendor/index']],
+                            '<li class="divider"></li>',
+                            ['label' => Yii::t('app', 'Sync attendance'), 'url' => ['/site/sync-timecard']],
                             '<li class="divider"></li>',
                             ['label' => Yii::t('app', 'Setting'), 'url' => ['/site/setting']],
+                            ['label' => Yii::t('app', 'Change password'), 'url' => ['/user/password', 'id' => $user->uid]],
+                        ],
+                    ];
+                } else {
+                    $navItems[] = ['label' => Yii::t('app', 'User'),
+                        'items' => [
+                            ['label' => Yii::t('app', 'Update user information'), 'url' => ['/user/update', 'id' => $user->uid]],
+                            ['label' => Yii::t('app', 'Change password'), 'url' => ['/user/password', 'id' => $user->uid]],
                         ],
                     ];
                 }
-            }
+                
+            } 
             
             $navItems[] = ['label' => 'En/中',
                 'items' => [
@@ -123,7 +135,7 @@ AppAsset::register($this);
 	<footer class="footer">
 		<div class="container">
 			<p class="pull-left">&copy; <?= Yii::t('app', 'Geely Auto (Shanghai) ') . date('Y') ?></p>
-			<p class="pull-right">Powered by <a href="#" rel="external">MiaoXiang Electronics</a></p>
+			<p class="pull-right"><mark>V0.1.0</mark> Powered by <a href="#" rel="external">MiaoXiang Electronics</a></p>
 		</div>
 	</footer>
 

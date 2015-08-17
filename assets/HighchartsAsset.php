@@ -42,7 +42,7 @@ class HighchartsAsset extends AssetBundle
         }
         
         if( !YII_ENV_DEV ){
-            foreach ($js as &$file) {
+            foreach ($this->js as &$file) {
                 $file = str_ireplace(".src.js", ".js", $file);
             }
         }

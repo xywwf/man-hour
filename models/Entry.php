@@ -26,7 +26,38 @@ use Yii;
  * @property MhUserInfo $user
  */
 class Entry extends \yii\db\ActiveRecord
-{    
+{
+    const STATE_NORMAL      = 0;
+    const STATE_DELETED     = 1;
+    
+    private static $_state_map = [];
+    
+    public static function getStateMap()
+    {
+        if( count( self::$_state_map ) <= 0 )
+        {
+            self::$_state_map = [
+                self::STATE_NORMAL    => 'Normal',
+                self::STATE_DELETED   => 'Deleted',
+            ];
+    
+            array_walk( self::$_state_map, "\app\G::array_t" );
+        }
+    
+        return self::$_state_map;
+    }
+    
+    public static function stateMap($key)
+    {
+        $a = self::getStateMap();
+        if( array_key_exists($key, $a) ){
+            return $a[$key];
+        }
+    
+        return $a[0];
+    }
+    
+    
     /**
      * @inheritdoc
      */
@@ -49,9 +80,22 @@ class Entry extends \yii\db\ActiveRecord
             [['duration'], 'integer', 'min' => 60, 'max' => 86400 ],
             [['end_time'], 'compare', 'operator' => '>', 'compareAttribute' => 'start_time' ],
             //[['start_time'], 'compare', 'operator' => '<', 'compareAttribute' => 'end_time' ],
+            [['start_time', 'end_time'], 'validateTime'],
         ];
     }
 
+    public function validateTime($attribute, $params)
+    {
+        $count = self::find()->andWhere(['start_date' => $this->start_date, 'state' => self::STATE_NORMAL ])
+            ->andWhere( ['<', 'start_time', $this->$attribute])
+            ->andWhere( ['>', 'end_time', $this->$attribute])
+            ->count();
+        if ($count) {
+            $this->addError($attribute, Yii::t('app','Time overlaps other log!'));
+        }
+    }
+    
+    
     /**
      * @inheritdoc
      */
@@ -83,7 +127,7 @@ class Entry extends \yii\db\ActiveRecord
      */
     public function getProject()
     {
-        return $this->hasOne(Project::className(), ['id' => 'project_id']);
+        return $this->hasOne(ProjectInfo::className(), ['id' => 'project_id']);
     }
 
     /**
