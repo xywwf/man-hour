@@ -50,7 +50,7 @@ class G
     public static function setSettingByName($name, $value){
         if (isset($name)){
             $model = Setting::findOne(['name' => $name]);
-            $model->value = $value;
+            $model->value = is_string($value) ? $value : strval($value);
             return $model->save();
         }
     

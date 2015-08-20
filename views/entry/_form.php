@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\widgets\Pjax;
+//use yii\widgets\Pjax;
 use app\models\ProjectInfo;
 use kartik\dropdown\DropdownX;
 //use yii\bootstrap\Dropdown;
@@ -15,6 +15,8 @@ use kartik\dropdown\DropdownX;
 $items = \app\models\ProjectNode::getAllItems();
 $calStartDate = date('Y-m-d',strtotime("-". app\G::getSettingByName('EntryDays', 0) ." day"));
 $calEndDate = date('Y-m-d');
+
+$msgNoData = Yii::t('app', 'No data');
 //var_dump($calStartDate);
 //Yii::$app->end();
 ?>
@@ -26,18 +28,31 @@ $calEndDate = date('Y-m-d');
     
     <table class="form-table">
 		<tr>
-			<td width="33%"><?= $form->field($model, 'project_id')->dropDownList(ProjectInfo::getIdNameMap(['state' => ProjectInfo::STATE_NORMAL]))->label(Yii::t('app', 'Working project')) ?></td>
+			<td width="33%"><?= $form->field($model, 'project_id')->widget('\kartik\select2\Select2', ['data' => app\models\ProjectInfo::getIdNameMap(['state' => ProjectInfo::STATE_NORMAL]),
+                'options' => [
+                    'placeholder' => app\G::t('Please choose...'), 
+                ]])->label(Yii::t('app', 'Working project')) ?></td>
 			<td width="33%"><?= $form->field($model, 'start_date')->widget('kartik\widgets\DatePicker', 
-			    ['convertFormat' => true, 'removeButton' => false, 'pluginOptions' => ['todayBtn' => 'linked', 'todayHighlight' => true, 'startDate' => $calStartDate, 'endDate' => $calEndDate ]]) ?></td>
+			    [ 'type' => kartik\widgets\DatePicker::TYPE_COMPONENT_APPEND, 'convertFormat' => true, 'removeButton' => false, 'pluginOptions' => ['todayBtn' => 'linked', 'todayHighlight' => true, 'startDate' => $calStartDate, 'endDate' => $calEndDate ]]) ?></td>
 			<td></td>
 		</tr>
-<!-- 	
 		<tr>
-			<td><?= Html::textInput("attendanceTimeStart", '', ['id' => 'attendanceTimeStart']) ?></td>
-			<td><?= Html::textInput("attendanceTimeEnd", '', ['id' => 'attendanceTimeEnd']) ?></td>
+			<td>
+			    <div class="form-group">
+                    <label class="control-label" for="attendanceTimeStart"><?= Yii::t('app', 'Card start time') ?></label>
+                    <input type="text" id="attendanceTimeStart" class="form-control" value="<?= $msgNoData ?>" readonly>
+                    <div class="help-block"></div>
+                </div>
+            </td>
+			<td>
+				<div class="form-group">
+                    <label class="control-label" for="attendanceTimeEnd"><?= Yii::t('app', 'Card end time') ?></label>
+                    <input type="text" id="attendanceTimeEnd" class="form-control" value="<?= $msgNoData ?>" readonly>
+                    <div class="help-block"></div>
+                </div>
+			</td>
 			<td></td>
-		</tr>
- -->			
+		</tr>		
 		<tr>
 			<td><?= $form->field($model, 'start_time')->widget('kartik\widgets\TimePicker', ['pluginOptions' => ['minuteStep' => 30,'showMeridian' => false]])?></td>
 			<td><?= $form->field($model, 'end_time')->widget('kartik\widgets\TimePicker', ['pluginOptions' => [ 'minuteStep' => 30,'showMeridian' => false]]) ?></td>
@@ -54,9 +69,9 @@ $calEndDate = date('Y-m-d');
 			<td colspan="3">
 			     <?php 
                         //$dropdown  = Html::beginTag('div', ['class'=>'dropdown']);
-                        $dropdown = Html::button( '<span class="glyphicon glyphicon-tags"></span></button>', 
+                        $dropdown = Html::button( '<span class="glyphicon glyphicon-tags"></span>', 
                             ['id' => 'btnDropdownTrigger', 'type'=>'button', 'class'=>'btn btn-success', 'style' => 'filter:alpha(opacity=70);-moz-opacity:0.7;-khtml-opacity: 0.7;opacity: 0.7;', 
-                             'data-toggle'=>'dropdown', 'data-placement' => 'right', 'title'=> app\G::t('Quick adding desciption')]);
+                             'data-toggle'=>'dropdown', 'data-placement' => 'right', 'data-container' => 'body', 'title'=> app\G::t('Quick adding desciption')]);
                         $dropdown .= DropdownX::widget([
                             //'options'=>['class'=>'dropdown-menu-left'], // for a right aligned dropdown menu
                             'id' => 'dropdownProjectList',
@@ -101,6 +116,9 @@ $calEndDate = date('Y-m-d');
 
    
 <?php $this->beginBlock('jsInView')?>
+
+    var msgNoData = "<?= $msgNoData ?>";
+
     function timeToMinute(time)
     {
         var str  = time.split(':', 2);
@@ -146,61 +164,72 @@ $calEndDate = date('Y-m-d');
     
     function entryFormInit()
     {
-        $.widget( "ui.timespinner", $.ui.spinner, {
-            options: {
-              // minutes
-              step: 30,
-              // hours
-              page: 60
-            },
-         
-            _parse: function( value ) {
-              if ( typeof value === "string" ) {
-                return timeToMinute(value);
-              }
-              return value;
-            },
-         
-            _format: minuteToTime
-          });   
-      
-        var min = Number($("#entry-duration").val()); min = isNaN(min) ? 0 : (Math.floor(min/60));
-    
-        $( "#duration_timespinner").timespinner().timespinner("value", min).removeClass("ui-spinner-input");
-    
-        $( "#duration_timespinner").on( "timespinnerchange timespinnerspin", function(event,ui) {
-            var min = event.type == "timespinnerspin" ? ui.value : $(this).timespinner("value");
-            $("#entry-duration").val( min * 60 );
-            $("#entry-end_time").val( timeAdd( $("#entry-start_time").val(), Number(min) ) );
-        });
-        
         $("#entry-start_time").on('change', function(){
-            var min = timeSub( $("#entry-end_time").val(), $("#entry-start_time").val());
-            $( "#duration_timespinner").timespinner("value", min);
-            $("#entry-duration").val( min * 60 );        
+            var min = timeSub( $("#entry-end_time").val(), $(this).val());
+            //$( "#duration_timespinner").timespinner("value", min);
+            $("#duration_timespinner").val(minuteToTime(min));
+            $("#entry-duration").val( min * 60 ); 
+            
+            var timeStart = $("#attendanceTimeStart").val();
+            if (timeStart != msgNoData) {
+                var formGroup = $("#attendanceTimeStart").closest(".form-group");
+                var helpBlock = formGroup.find(".help-block");
+                min = timeSub( timeToMinute(timeStart) - 30, $(this).val());
+                if( min > 0 ) {
+                    formGroup.addClass('has-error');
+                    helpBlock.each(function(){ $(this).text("不能早于考勤半小时"); });
+                } else {
+                    formGroup.removeClass('has-error');
+                    helpBlock.each(function(){ $(this).text(""); });
+                }
+            }             
         });
         
         $("#entry-end_time").on('change', function(){
             var min = timeSub( $("#entry-end_time").val(), $("#entry-start_time").val());
-            $("#duration_timespinner").timespinner("value", min);
+            //$("#duration_timespinner").timespinner("value", min);
+            $("#duration_timespinner").val(minuteToTime(min));
             $("#entry-duration").val( min * 60 );
+            
+            var timeEnd = $("#attendanceTimeEnd").val();
+            if (timeEnd != msgNoData) {
+                var formGroup = $("#attendanceTimeEnd").closest(".form-group");
+                var helpBlock = formGroup.find(".help-block");
+                min = timeSub( $(this).val(), timeToMinute(timeEnd) + 30);
+                if( min > 0 ) {
+                    formGroup.addClass('has-error');
+                    helpBlock.each(function(){ $(this).text("不能晚于考勤半小时"); });
+                } else {
+                    formGroup.removeClass('has-error');
+                    helpBlock.each(function(){ $(this).text(""); });
+                }
+            }
         });    
 
-        /*
-        $("#entry-start_date").on('change', function(){
+        $('#' + $("#entry-start_date").data('datepicker-source')).on('hide', function(){
             $.ajax({
                 type: "GET",
-                url: '/site/attendance-time?id=0&date=' + $(this).val(), 
+                url: '/timecard/attendance-time?id=0&date=' + $("#entry-start_date").val(), 
                 dataType: "json",
                 success: function(data){
-                    if (data !== null){
-                        $('#attendanceTimeStart').val(data.start);
-                        $('#attendanceTimeEnd').val(data.end);
+                    var start = msgNoData;
+                    var end   = msgNoData;
+
+                    if (data != null){
+                        if (data.start != null) {
+                            start = data.start;
+                        }
+                        if (data.end != null) {
+                            end = data.end;
+                        }
                     }
+                    $('#attendanceTimeStart').val(start);
+                    $('#attendanceTimeEnd').val(end);
+                    $("#entry-start_time").change();
+                    $("#entry-end_time").change();
                 }
             });  
         });
-        */
         
         /*  在textarea处插入文本--Start */
         (function($) {
@@ -271,8 +300,8 @@ $calEndDate = date('Y-m-d');
 <?php $this->endBlock()?>
 <?php
 
-\app\assets\JuiMouseWheelAsset::register($this);
-\yii\jui\JuiAsset::register($this);
+//\app\assets\JuiMouseWheelAsset::register($this);
+//\yii\jui\JuiAsset::register($this);
 $this->registerJs($this->blocks['jsInView'], \Yii\web\View::POS_END);
 ?>    
  

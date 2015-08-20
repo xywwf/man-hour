@@ -135,7 +135,7 @@ Yii::$app->formatter->nullDisplay = '';
                 'filename' => $fileTitle,
                 'showColumnSelector' => false,
                 'dropdownOptions' => [
-                    'label' => '导出表格',
+                    'label' => app\G::t('Export table'),
                     'class' => 'btn btn-default',
                 ],
                 'exportConfig' => [

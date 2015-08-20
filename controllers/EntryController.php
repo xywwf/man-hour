@@ -96,7 +96,7 @@ class EntryController extends \app\MyController
 
         //reuse the id as the day index starting from 'first_day'
         $models = ViewEntry::find()->select(['project_id', 'project_name', 'color', 'DATEDIFF(start_date, "'.$first_date.'") as id', 'sum(duration) as duration'])
-            ->where(['user_id'=>$uid])->andWhere(['between', 'start_date', $first_date, $last_date ])
+            ->where(['user_id'=>$uid, 'state' => Entry::STATE_NORMAL])->andWhere(['between', 'start_date', $first_date, $last_date ])
             ->groupBy(['project_id', 'start_date'])
             //->orderBy('project_id, start_date')
             ->all();
@@ -133,6 +133,7 @@ class EntryController extends \app\MyController
             'DATEDIFF(max(start_date), min(start_date)) as days', 
             'sum(duration) as time'])
         //->where(['user_id'=>$uid])->andWhere(['between', 'start_date', $first_date, $last_date ])
+        ->andWhere(['state' => Entry::STATE_NORMAL])
         ->groupBy(['project_id'])
         ->asArray()->all();
     
@@ -172,7 +173,8 @@ class EntryController extends \app\MyController
                 'year(start_date) as year','user_id','personal_name', 'experience', 'price', 'month(start_date) as month', 
                 "date_format(start_date, '%Y%c') as id",  'sum(duration) as duration'
             ])
-            ->groupBy(['user_id', "date_format(start_date, '%Y%c')"]);
+            ->groupBy(['user_id', "date_format(start_date, '%Y%c')"])
+            ->andWhere(['state' => Entry::STATE_NORMAL]);
         
         $user_id    = [];
         $project_id = [];
@@ -269,7 +271,8 @@ class EntryController extends \app\MyController
             ViewEntry::find()->select([
                 'company','personal_name', 'day(start_date) as day', 'min(start_time) as start_time', 'max(end_time) as end_time', 'sum(duration) as duration'
             ])
-            ->groupBy(['start_date'])->orderBy('day');
+            ->groupBy(['start_date'])->orderBy('day')
+            ->andWhere(['state' => Entry::STATE_NORMAL]);
         
         $user_id    = null;
         $start_date = null;
@@ -362,7 +365,7 @@ class EntryController extends \app\MyController
         if ($model->load(Yii::$app->request->post())) {
             if ($model->save()){
                 G::flash('success', 'Save successfully!');
-                return $this->redirect(['index', 'page' => 'last']);                
+                return $this->redirect(['index',/* page' => 'last' */]);                
             } else {
                 G::flash('error', 'Save unsuccessfully!');
             }

@@ -265,14 +265,14 @@ $beforeFooterExport = [
             </tr>
             <tr>
                 <td> 
-                    <?= $form->field($model, 'user_id')->label(G::t('Personal name'))->widget('kartik\widgets\Select2', [
+                    <?= $form->field($model, 'user_id')->label(G::t('Personal name') . G::t('(Multiple selection)'))->widget('kartik\widgets\Select2', [
                         'data' => ArrayHelper::map(User::find()->orderBy('personal_name')->asArray()->all(), 'uid', 'personal_name'),
                         'options' => ['multiple'=>true],
-                        'pluginOptions' => ['allowClear'=>true, 'placeholder'=>'选择用户(多选)'],
+                        'pluginOptions' => ['allowClear'=>true, /*'placeholder'=>'选择用户(多选)'*/],
                     ] ) ?>
                 </td>
                 <td> 
-                    <?= $form->field($model, 'project_id')->label(G::t('Project name'))->widget('kartik\widgets\Select2', [
+                    <?= $form->field($model, 'project_id')->label(G::t('Project name') . G::t('(Single selection)'))->widget('kartik\widgets\Select2', [
                         'data' => ArrayHelper::map(ProjectInfo::find()->orderBy('name')->asArray()->all(), 'id', 'name'),
                         'pluginOptions' => ['allowClear'=>true, 'placeholder'=>'选择项目(单选)'],
                     ] ) ?>
@@ -305,7 +305,7 @@ $beforeFooterExport = [
                 'filename' => $fileTitle,
                 'showColumnSelector' => false,
                 'dropdownOptions' => [
-                    'label' => '导出表格',
+                    'label' => app\G::t('Export table'),
                     'class' => $mouthCount > 0 ? 'btn btn-default' : 'btn btn-default disabled',
                 ],
                 'exportConfig' => [

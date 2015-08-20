@@ -44,7 +44,7 @@ class ViewEntrySearch extends ViewEntry
         $query = ViewEntry::find();
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $query->orderBy('start_date DESC, start_time ASC'),
         ]);
 
         $this->load($params);
@@ -60,7 +60,7 @@ class ViewEntrySearch extends ViewEntry
             'user_id' => $this->user_id,
             'project_id' => $this->project_id,
             'state' => $this->state,
-            //'start_date' => $this->start_date,
+            'start_date' => $this->start_date,
             //'start_time' => $this->start_time,
             //'update_time' => $this->update_time,
             //'update_user_id' => $this->update_user_id,

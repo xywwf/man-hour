@@ -62,16 +62,17 @@ $user = Yii::$app->user->identity;
                             ['label' => Yii::t('app', 'Department'), 'url' => ['/department/index']],                            
                             ['label' => Yii::t('app', 'Supplier'), 'url' => ['/vendor/index']],
                             '<li class="divider"></li>',
-                            ['label' => Yii::t('app', 'Sync attendance'), 'url' => ['/site/sync-timecard']],
-                            '<li class="divider"></li>',
                             ['label' => Yii::t('app', 'Setting'), 'url' => ['/site/setting']],
+                            ['label' => Yii::t('app', 'Sync attendance'), 'url' => ['/timecard/sync']],
+                            '<li class="divider"></li>',
+                            ['label' => Yii::t('app', 'Update personal information'), 'url' => ['/user/update','id' => $user->uid]],
                             ['label' => Yii::t('app', 'Change password'), 'url' => ['/user/password', 'id' => $user->uid]],
                         ],
                     ];
                 } else {
                     $navItems[] = ['label' => Yii::t('app', 'User'),
                         'items' => [
-                            ['label' => Yii::t('app', 'Update user information'), 'url' => ['/user/update', 'id' => $user->uid]],
+                            ['label' => Yii::t('app', 'Update personal information'), 'url' => ['/user/update', 'id' => $user->uid]],
                             ['label' => Yii::t('app', 'Change password'), 'url' => ['/user/password', 'id' => $user->uid]],
                         ],
                     ];
@@ -135,7 +136,7 @@ $user = Yii::$app->user->identity;
 	<footer class="footer">
 		<div class="container">
 			<p class="pull-left">&copy; <?= Yii::t('app', 'Geely Auto (Shanghai) ') . date('Y') ?></p>
-			<p class="pull-right"><mark>V0.1.0</mark> Powered by <a href="#" rel="external">MiaoXiang Electronics</a></p>
+			<p class="pull-right"><mark>V0.2.1</mark> Powered by <a href="#" rel="external">MiaoXiang Electronics</a></p>
 		</div>
 	</footer>
 

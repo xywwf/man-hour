@@ -42,9 +42,10 @@ class UserSearch extends User
     public function search($params)
     {
         $query = User::find();
-
+        $user = Yii::$app->user->identity;
+        
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $query->andWhere(['>', 'type', $user->type]),//->orderBy('department_id, company_id'),
         ]);
 
         $this->load($params);
@@ -64,7 +65,7 @@ class UserSearch extends User
         ]);
 
         $query->andFilterWhere(['in', 'company_id', $this->company_id])
-        ->andFilterWhere(['in', 'company_id', $this->department_id]);
+        ->andFilterWhere(['in', 'department_id', $this->department_id]);
         
         $query->andFilterWhere(['like', 'username', $this->username])
             ->andFilterWhere(['like', 'personal_name', $this->personal_name])

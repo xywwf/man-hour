@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\BaseHtml;
 
 /**
  * This is the model class for table "user".
@@ -40,8 +41,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     
     private static $_type_map = [];
 
-    public static function getTypeMap()
-    {
+    public static function getTypeMap($type = null, $end = null)
+    {        
         if( count( self::$_type_map ) <= 0 )
         {  
             self::$_type_map = [
@@ -51,21 +52,20 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                 self::TYPE_NORMAL     => 'Normal user',
                 self::TYPE_CLOSED     => 'Closed user',
             ];
-            
             array_walk( self::$_type_map, "\app\G::array_t" );
         }
         
-        return self::$_type_map;
-    }
-
-    public static function typeMap($key)
-    {
-        $a = self::getTypeMap();
-        if( array_key_exists($key, $a) ){
-            return $a[$key];
+        $type = ($type === null || $type < self::TYPE_INIT || $type > self::TYPE_NORMAL) ?  -1 : $type;
+        $end  = ($end === null || ($end <= $type) || $end >= count(self::$_type_map)) ? count(self::$_type_map) : $end;
+        
+        $result = [];
+        foreach( self::$_type_map as $key=>$value){
+            if ($key > $type &&  $key <= $end) {
+                $result[$key] = $value;
+            }
         }
         
-        return $a[0];
+        return $result;
     }
     
     /**
@@ -87,9 +87,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['type', 'created_by', 'last_updated_by', 'ext', 'department_id', 'company_id'], 'integer'],
+            [['type', 'created_by', 'last_updated_by', 'ext', 'department_id', 'company_id', 'experience'], 'integer'],
             [['price'], 'number'],
-            [['username', 'personal_name', 'employe_id'], 'required'],
+            [['username', 'personal_name', 'type'], 'required'],
+            [['employe_id','department_id', 'company_id'], 'required', 
+                'when' => function($model){ return $model->type == self::TYPE_NORMAL; }, 
+                'whenClient' => "function (attribute, value) { return $('#".BaseHtml::getInputId($this, 'type')."').val() == ". self::TYPE_NORMAL .";}"
+            ],
             [['created_time', 'last_updated_time', 'password'], 'safe'],
             [['username', 'personal_name', 'personal_id', 'employe_id', 'mobile'], 'string', 'max' => 24],
             [['email'], 'string', 'max' => 64],
@@ -162,6 +166,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             $userAuth           = new UserAuth();
             
             $password = Yii::$app->params['defaultPassword'];
+            $password = \app\G::getSettingByName('InitPass', $password);
             if( isset($this->password) && strlen($this->password) )
             {
                 $password = $this->password;
@@ -182,7 +187,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                     return true;
                 }
             }
-            throw new \Exception('Add user to DB failed!');
+            return false;
+            //throw new \Exception('Add user to DB failed!');
         });
     }
     

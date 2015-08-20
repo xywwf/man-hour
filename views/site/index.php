@@ -18,7 +18,7 @@ $user = Yii::$app->user->identity;
         <div style="padding-top: 30px; text-align: left;">
                 
             <div class="panel panel-info">
-                <div class="panel-heading"><span class="glyphicon glyphicon-time"></span>Manhour logs management</div>
+                <div class="panel-heading"><span class="glyphicon glyphicon-time"></span>&nbsp;Manhour logs management</div>
                 <div class="panel-body">
                     <?= Html::a('Click to manage your manhour logs<span class="badge">'.$user->getEntriesCount().'</span>', ['entry/index' ], [
                         'class' => 'btn btn-success', 
@@ -26,7 +26,7 @@ $user = Yii::$app->user->identity;
                 </div>
             </div>
             <div class="panel panel-info">
-                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span>User information</div>
+                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span>&nbsp;User information</div>
                 <div class="panel-body">
                     <p><?= Html::a('Update your profile&raquo;', ['user/update', 'id' => $user->uid], [
                             'class' => 'btn btn-success', 
@@ -49,7 +49,7 @@ $user = Yii::$app->user->identity;
         <div style="padding-top: 30px; text-align: left;">
                 
             <div class="panel panel-info">
-                <div class="panel-heading"><span class="glyphicon glyphicon-time"></span>管理工时记录</div>
+                <div class="panel-heading"><span class="glyphicon glyphicon-time"></span>&nbsp;管理工时记录</div>
                 <div class="panel-body">
                     <?= Html::a('点击查看您的工时记录 <span class="badge">'.$user->getEntriesCount().'</span>', ['entry/index' ], [
                         'class' => 'btn btn-success', 
@@ -57,9 +57,9 @@ $user = Yii::$app->user->identity;
                 </div>
             </div>
             <div class="panel panel-info">
-                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span>修改用户信息</div>
+                <div class="panel-heading"><span class="glyphicon glyphicon-user"></span>&nbsp;修改用户信息</div>
                 <div class="panel-body">
-                    <p><?= Html::a(app\G::t('Update user information') . '&nbsp;&raquo;', ['user/update', 'id' => $user->uid], [
+                    <p><?= Html::a(app\G::t('Update personal information') . '&nbsp;&raquo;', ['user/update', 'id' => $user->uid], [
                             'class' => 'btn btn-success', 
                         ]) ?>
                         <?= Html::a(app\G::t('Change password') . '&nbsp;&raquo;', ['user/password', 'id' => $user->uid], [

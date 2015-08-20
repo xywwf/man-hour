@@ -10,11 +10,8 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Setting;
-use app\models\Transcard;
 use app\MyController;
 use yii\data\ActiveDataProvider;
-use app\G;
-use yii\helpers\Json;
 
 class SiteController extends Controller
 {
@@ -52,53 +49,6 @@ class SiteController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
-    }
-
-    public function actionSyncTimecard()
-    {
-        $params = G::getSettingByName();
-    
-        $db = new yii\db\Connection(['driverName' => 'mssql',
-            'dsn' => 'odbc:DRIVER={SQL Server};Server=' . $params['DbServer'] .';Database=' . $params['DbName'],
-            'username' => $params['DbUser'],
-            'password' => $params['DbPass'],
-            'attributes' => [
-                PDO::ATTR_TIMEOUT => 5,
-            ],
-        ]);
-    
-        $endId = $startId = $params['DbStartID'];
-        $command = $db->createCommand('select AutoID, EVTime, PersonnelID from transcardhis where LineID=4 and AutoID >= ' . $startId );
-        $rows =  $command->queryAll();
-
-        $command = $db->createCommand('select AutoID, EVTime, PersonnelID from transcard where LineID=4 and AutoID >= ' . $startId );
-        $rows = $rows + $command->queryAll();
-        
-        $model = null;
-        $count = 0;
-        foreach($rows as $row){
-            $model = new Transcard($row);
-            try {
-                if ($model->save() ){
-                    $count++;
-                }
-            } catch(\Exception $e) {
-                //ignore the expection
-            }
-        }
-    
-        if ($model !== null){
-            $endId = strval($model->AutoID + 1);
-            G::setSettingByName('DbStartID', $endId );
-        }
-    
-        echo $this->renderContent('<div class="alert alert-success alert-dismissable"><h2>共导入<strong>'. $count . '</strong>条考勤数据！ID范围 '. $startId . ':' . $endId . '</h2></div>');
-    }
-    
-    public function actionAttendanceTime($id, $date)
-    {
-        $models = Transcard::find()->select('min(time) as start, max(time) as end')->andWhere(['PersonnelID' => $id, 'date' => $date])->groupBy('date')->asArray()->one();
-        echo Json::encode($models);
     }
     
     /**
@@ -148,10 +98,11 @@ class SiteController extends Controller
             'DbUser'    => ['cat' => 'DB', 'lable' =>'Attendance DB username', 'value' => 'sa'],
             'DbPass'    => ['cat' => 'DB', 'lable' =>'Attendance DB password', 'value' => 'sa'],
             'DbStartID' => ['cat' => 'DB', 'lable' =>'Attendance DB sync start AutoID', 'value' => '0'],
+            'DbSyncTime' => ['cat' => 'DB', 'lable' =>'Attendance DB last sync time', 'value' => \Yii::$app->formatter->asDatetime(time())],
         ];
                 
         $dataProvider = new ActiveDataProvider([
-            'query' =>Setting::find()->indexBy('name')->orderBy('id'),
+            'query' => Setting::find()->indexBy('name')->orderBy('id'),
             'key' => 'name',
             'pagination' => false,
         ]);

@@ -40,7 +40,7 @@ class PasswordForm extends Model
             [['passwordOld', 'passwordNew', 'passwordConfirm'], 'required'],
             // password is validated by validatePassword()
             ['passwordOld', 'validatePassword'],
-            ['passwordConfirm', 'compare', 'compareAttribute' => 'passwordNew', 'message' => '确认密码与新密码不一致!'],
+            ['passwordConfirm', 'compare', 'compareAttribute' => 'passwordNew', 'message' => Yii::t('app', 'Is not same as New passowrd!')],
         ];
     }
 

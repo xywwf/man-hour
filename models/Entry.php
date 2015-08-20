@@ -86,11 +86,24 @@ class Entry extends \yii\db\ActiveRecord
 
     public function validateTime($attribute, $params)
     {
-        $count = self::find()->andWhere(['start_date' => $this->start_date, 'state' => self::STATE_NORMAL ])
-            ->andWhere( ['<', 'start_time', $this->$attribute])
-            ->andWhere( ['>', 'end_time', $this->$attribute])
-            ->count();
-        if ($count) {
+        $query = self::find();
+        
+        if ($attribute == 'start_time') {
+            $query->andWhere( ['<=', 'start_time', $this->start_time])
+                  ->andWhere( ['>', 'end_time', $this->start_time]);
+        } else {
+            $query->andWhere( ['<', 'start_time', $this->end_time])
+                  ->andWhere( ['>=', 'end_time', $this->end_time])
+                  ->orWhere(['and', ['>', 'start_time', $this->start_time] , ['<', 'end_time', $this->end_time] ]);
+        }
+        
+        $query->andWhere(['start_date' => $this->start_date, 'state' => self::STATE_NORMAL, 'user_id' => $this->user_id]);
+        
+        if (!$this->isNewRecord) {
+            $query->andWhere(['<>', 'id', $this->id]);
+        }
+        
+        if ($query->count()) {
             $this->addError($attribute, Yii::t('app','Time overlaps other log!'));
         }
     }

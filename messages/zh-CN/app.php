@@ -28,6 +28,7 @@ return [
     'Deleted' => '已删除',
     'Finished' => '已完成',
     'Closed' => '关闭',
+    'Export table' => '导出表格',
     
     
     //Main page
@@ -43,7 +44,7 @@ return [
     'Supplier' => '供应商管理',
     'Department' => '吉利部门管理',
     'Setting' => '系统设置',
-    'Update user information' => '更新用户信息',
+    'Update personal information' => '更新个人信息',
     'Change password' => '修改密码',
     'Sync attendance' => '同步考勤数据',
     
@@ -53,6 +54,7 @@ return [
     'Initial user password' => '初始用户密码',
     'Reset to default' => '恢复默认值',
     'Attendance DB sync start AutoID' => '考勤数据库同步起始AutoID',
+    'Attendance DB last sync time' => '考勤数据库最近同步时间',
     'Attendance DB name' => '考勤数据库名称',
     'Attendance DB password' => '考勤数据库密码',
     'Attendance DB server' => '考勤数据库服务器地址',
@@ -82,6 +84,8 @@ return [
     'End date' => '截止日期',
     'Generate report' => '生成报表',
     'Reset' => '重置',
+    '(Multiple selection)' => '(多选)',
+    '(Single selection)' => '(单选)',
     
     //User table
     'User ID' => '用户ID',
@@ -102,17 +106,21 @@ return [
     'Last updated time' => '更新时间',
     'Last updated by' => '更新者',
     'User list' => '用户列表',
-    '+Add new user' => '+添加新用户',
+    'Add new user' => '添加新用户',
     'Modify user information' =>'修改用户信息',
     'Reset password' => '重置密码',
     'Batch delete users' => '批量删除用户',
+    'Batch reset password' => '批量重置密码',
     'Synchronize user list' => '同步用户列表',
     
     'Old password' => '旧密码',
     'New password' => '新密码',
     'Confirm password' => '确认密码',
+    'Is not same as New passowrd!' => '确认密码与新密码不一致!',
     'Change password successfully!' => '修改密码成功！',
     'Change password failed!' => '修改密码失败！',
+    'Please select at least one row to reset password!' => '请选择需要重置密码的用户！',
+    'Please confirm to reset password of the selected rows?' => '请确认您要重置这些用户的密码？',
     
     'Uninitialized'   => '未启用用户',
     'Super admin'     => '超级管理员',
@@ -157,14 +165,19 @@ return [
     'Start' => '开始',
     'Duration' => '时长',
     'End' => '结束',
+    'Card start time' => '打卡开始时间',
+    'Card end time' => '打卡结束时间',
     'Working description' => '工作内容描述',
     'Last updated by user name' => '更新人员姓名',
     'Modify manhour log' =>'修改工时记录',
         
-    '+Add a manhour log'   => '+登记新工时',
+    'Add a manhour log'   => '登记新工时',
     'Batch delete logs' => '批量删除记录',    
     'Quick adding desciption' => '快捷插入项目描述',
     'Time overlaps other log!' => '时间与其它记录有重叠！',
+    'No data' => '无',
+    'Current max AutoID of attendance DB' => '当前考勤数据库最大AutoID',
+    'Attendance DB last sync AutoID' => '最后同步的AutoID',
     
     //Export
     'Manhour statistics by person & month' => '费用结算明细',

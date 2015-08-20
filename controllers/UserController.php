@@ -8,7 +8,9 @@ use app\models\User;
 use app\models\UserSearch;
 use app\models\PasswordForm;
 use yii\web\NotFoundHttpException;
+use yii\web\BadRequestHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -24,6 +26,24 @@ class UserController extends \app\MyController
                     'delete' => ['post'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                //'only' => ['index', 'view', 'create', 'update', ],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'create', 'reset-password', 'reset-passwords', 'delete', 'deletes' ],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->isAdmin();
+                        }
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update', 'view', 'password' ],
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -33,10 +53,6 @@ class UserController extends \app\MyController
      */
     public function actionIndex()
     {
-        if (!Yii::$app->user->identity->isAdmin()){
-            throw  new yii\web\BadRequestHttpException("No permission");
-        }
-        
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -72,10 +88,6 @@ class UserController extends \app\MyController
      */
     public function actionCreate()
     {
-        if (!Yii::$app->user->identity->isAdmin()){
-            throw  new yii\web\BadRequestHttpException("No permission");
-        }        
-        
         $model = new User();
         $model->type = User::TYPE_NORMAL;
 
@@ -99,8 +111,9 @@ class UserController extends \app\MyController
      */
     public function actionUpdate($id)
     {
-        if (!Yii::$app->user->identity->isAdmin()){
-            $id = Yii::$app->user->identity->uid;
+        $user = Yii::$app->user->identity;
+        if (!$user->isAdmin()){
+            $id = $user->uid;
         }
 
         $model = $this->findModel($id);       
@@ -108,7 +121,9 @@ class UserController extends \app\MyController
         if ($model->load(Yii::$app->request->post())) {
             if ($model->saveUserAndAuth()){
                 G::flash('success', 'Save successfully!');
-                return $this->redirect(['index']);
+                if ($user->isAdmin()){
+                    return $this->redirect(['index']);
+                }
             } else {
                 G::flash('error', 'Save unsuccessfully!');
             }
@@ -125,14 +140,9 @@ class UserController extends \app\MyController
      * @param string $id
      * @return mixed
      */
-    public function actionPassword($id)
-    {
-        if (!Yii::$app->user->identity->isAdmin()){
-            $id = Yii::$app->user->identity->uid;
-        }
-    
-        $model = new PasswordForm();
-        $model->id = $id;
+    public function actionPassword()
+    {   
+        $model = new PasswordForm(['id' => Yii::$app->user->identity->uid]);
     
         if ($model->load(Yii::$app->request->post())) {
             if ($model->save()){
@@ -157,6 +167,7 @@ class UserController extends \app\MyController
         $model = $this->findModel($id);
         
         $model->password = Yii::$app->params['defaultPassword'];   
+        $model->password = \app\G::getSettingByName('InitPass', $model->password);
         if( $model->saveUserAndAuth() ) {
             G::flash('success', 'Change password successfully!');            
         }else {
@@ -175,7 +186,15 @@ class UserController extends \app\MyController
      */
     public function actionResetPasswords($ids)
     {
-        return "TODO";
+        $password = \app\G::getSettingByName('InitPass', Yii::$app->params['defaultPassword']);
+        $encoded  = Yii::$app->security->generatePasswordHash($password);
+        if (\app\models\UserAuth::updateAll(['password' => $encoded] , ['in', 'uid', explode(',', $ids)])){
+            G::flash('success', 'Change password successfully!');
+        }else{
+            G::flash('error', 'Change password failed!');
+        }
+    
+        return $this->redirect(['index', 'page' => $this->req('page')]);
     }    
     
     /**
@@ -202,7 +221,7 @@ class UserController extends \app\MyController
      * @return mixed
      */
     public function actionDeletes($ids)
-    {
+    {   
         if (User::deleteAll(['in', 'uid', explode(',', $ids)])){
             G::flash('success', 'Delete successfully!');
         }else{
